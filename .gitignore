@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Builds / artifacts
+.next/
+out/
+build/
+dist/
+target/
+*.wasm
+
+# Env & secrets (public addresses live in frontend/.env.example)
+.env
+.env.local
+.env*.local
+.env.testnet
+
+# Generated
+frontend/next-env.d.ts
+frontend/tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# Logs / OS
+*.log
+.DS_Store
