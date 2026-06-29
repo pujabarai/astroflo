@@ -31,11 +31,17 @@ jobs:
         with:
           workspaces: contracts
 
+      # Fallback system libs in case binstall has to compile from source
+      # (stellar-cli's hardware-wallet/keyring crates link dbus-1 and libudev).
       - name: Install Stellar CLI build deps
-        run: sudo apt-get update && sudo apt-get install -y libdbus-1-dev pkg-config
+        run: sudo apt-get update && sudo apt-get install -y libdbus-1-dev libudev-dev pkg-config
 
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      # Pulls the prebuilt stellar binary — no native compilation needed.
       - name: Install Stellar CLI
-        run: cargo install --locked stellar-cli
+        run: cargo binstall --no-confirm stellar-cli
 
       - name: Build contracts (wasm release)
         run: cargo build --target wasm32-unknown-unknown --release
