@@ -1638,6 +1638,9 @@ npm run test         # vitest run
 
 ## 21. CI/CD Pipeline
 
+<img width="2854" height="1104" alt="Screenshot from 2026-06-29 15-55-20" src="https://github.com/user-attachments/assets/f1b08e25-252e-4f0a-a1e3-7216a256c03b" />
+
+
 Two GitHub Actions workflows in `.github/workflows/`:
 
 ### `ci.yml` — runs on every push & pull request to `main`
