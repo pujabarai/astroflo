@@ -1,10 +1,16 @@
 # StellarSwap — CLMM DEX on Stellar Testnet
 
 <img width="2854" height="1556" alt="Screenshot from 2026-06-29 16-07-29" src="https://github.com/user-attachments/assets/298b11ea-4bbf-4a4e-a61f-489b68d34864" />
-
+<div align="center">
+<img src="https://img.shields.io/badge/Stellar-Soroban-7B2FBE?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Rust-1.70%2B-red?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge" />
+<img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Status-Live%20on%20Testnet-brightgreen?style=for-the-badge" />
 
 > **A production-grade Concentrated Liquidity Market Maker (CLMM) DEX built on Stellar's Soroban smart contract platform. Initial trading pair: XLM / USDC on Stellar Testnet.**
 
+</div>
 ---
 
 ## Table of Contents
