@@ -8,10 +8,10 @@
 <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge" />
 <img src="https://img.shields.io/badge/Status-Live%20on%20Testnet-brightgreen?style=for-the-badge" />
 
-> **A production-grade Concentrated Liquidity Market Maker (CLMM) DEX built on Stellar's Soroban smart contract platform. Initial trading pair: XLM / USDC on Stellar Testnet.**
+ **A production-grade Concentrated Liquidity Market Maker (CLMM) DEX built on Stellar's Soroban smart contract platform. Initial trading pair: XLM / USDC on Stellar Testnet.**
 
 </div>
----
+
 
 ## Table of Contents
 
