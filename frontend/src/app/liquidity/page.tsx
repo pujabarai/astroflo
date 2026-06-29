@@ -29,14 +29,7 @@ export default function LiquidityPage() {
       }}
     >
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: "32px",
-        }}
-      >
+      <div className="page-header-row" style={{ marginBottom: "32px" }}>
         <div>
           <h1
             className="gradient-text"

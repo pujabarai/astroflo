@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import WalletButton from "./WalletButton";
@@ -14,6 +15,10 @@ const LINKS = [
 export default function Navbar() {
   const pathname = usePathname();
   const { data: pool } = usePool();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
 
   return (
     <nav
@@ -27,10 +32,10 @@ export default function Navbar() {
       }}
     >
       <div
+        className="nav-inner"
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "0 24px",
           height: "64px",
           display: "flex",
           alignItems: "center",
@@ -71,27 +76,24 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Nav links */}
-        <div style={{ display: "flex", gap: "4px" }}>
-          {LINKS.map(({ href, label }) => {
-            const isActive =
-              pathname === href || pathname.startsWith(href + "/");
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`nav-link ${isActive ? "active" : ""}`}
-              >
-                {label}
-              </Link>
-            );
-          })}
+        {/* Nav links (desktop) */}
+        <div className="nav-links" style={{ display: "flex", gap: "4px" }}>
+          {LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`nav-link ${isActive(href) ? "active" : ""}`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
-        {/* Right: price + wallet */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* Right: price + wallet + hamburger */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           {pool && (
             <div
+              className="nav-price"
               style={{
                 background: "rgba(99,102,241,0.08)",
                 border: "1px solid rgba(99,102,241,0.15)",
@@ -113,8 +115,32 @@ export default function Navbar() {
             </div>
           )}
           <WalletButton />
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
         </div>
       </div>
+
+      {/* Mobile dropdown menu */}
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          {LINKS.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`nav-link ${isActive(href) ? "active" : ""}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }

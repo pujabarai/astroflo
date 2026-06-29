@@ -2,54 +2,22 @@
 
 import { useWallet } from "@/hooks/useWallet";
 import { usePositions } from "@/hooks/usePositions";
-import { usePool } from "@/hooks/usePool";
 import SummaryCards from "@/components/portfolio/SummaryCards";
 import ActivityFeed from "@/components/portfolio/ActivityFeed";
 import PositionCard from "@/components/liquidity/PositionCard";
+import StellarWalletPanel from "@/components/wallet/StellarWalletPanel";
+import ContractStatus from "@/components/ContractStatus";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function PortfolioPage() {
   const { address, connect } = useWallet();
   const { data: positions, isLoading, refetch } = usePositions(address);
-  const { data: pool } = usePool();
   const queryClient = useQueryClient();
 
   function handleRefresh() {
     refetch();
     queryClient.invalidateQueries({ queryKey: ["positions"] });
-  }
-
-  if (!address) {
-    return (
-      <div
-        style={{
-          minHeight: "calc(100vh - 64px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "64px", marginBottom: "20px" }}>🔒</div>
-          <h2
-            style={{ color: "#e8eaf6", fontSize: "22px", fontWeight: 700, marginBottom: "10px" }}
-          >
-            Connect Your Wallet
-          </h2>
-          <p style={{ color: "#6b7280", marginBottom: "24px" }}>
-            View your positions, fees, and activity
-          </p>
-          <button
-            className="btn-primary"
-            onClick={connect}
-            style={{ padding: "14px 32px", fontSize: "15px" }}
-          >
-            Connect Freighter
-          </button>
-        </div>
-      </div>
-    );
   }
 
   return (
@@ -71,10 +39,47 @@ export default function PortfolioPage() {
           Portfolio
         </h1>
         <p style={{ color: "#6b7280", fontSize: "14px" }}>
-          {address.slice(0, 8)}...{address.slice(-6)}
+          {address
+            ? `${address.slice(0, 8)}...${address.slice(-6)}`
+            : "Connect a wallet to view your positions, fees, and activity"}
         </p>
       </div>
 
+      {/* Live on-chain pool state via the contract.ts read layer */}
+      <ContractStatus />
+
+      {/* Freighter wallet — detect · connect · balance · send XLM (Testnet) */}
+      <StellarWalletPanel />
+
+      {!address ? (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "48px 24px",
+            background: "rgba(26,29,46,0.4)",
+            border: "1px solid rgba(99,102,241,0.1)",
+            borderRadius: "16px",
+          }}
+        >
+          <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔒</div>
+          <h2
+            style={{ color: "#e8eaf6", fontSize: "20px", fontWeight: 700, marginBottom: "10px" }}
+          >
+            Connect to view your positions
+          </h2>
+          <p style={{ color: "#6b7280", marginBottom: "24px" }}>
+            Your liquidity positions, fees, and activity will appear here.
+          </p>
+          <button
+            className="btn-primary"
+            onClick={connect}
+            style={{ padding: "14px 32px", fontSize: "15px" }}
+          >
+            Connect Freighter
+          </button>
+        </div>
+      ) : (
+      <>
       {/* Summary cards */}
       {positions && positions.length > 0 && (
         <SummaryCards positions={positions} />
@@ -175,6 +180,8 @@ export default function PortfolioPage() {
           <ActivityFeed walletAddress={address} />
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }

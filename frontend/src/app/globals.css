@@ -133,3 +133,67 @@ body {
   to   { transform: translateX(0);    opacity: 1; }
 }
 .toast { animation: slideIn 0.3s ease-out; }
+
+/* ──────────────────────────────────────────────────────────────
+   Responsive layout
+   The app styles with inline styles, which CSS can't override for
+   the same property. These classes own the properties that need to
+   change across breakpoints (the inline styles must NOT set them).
+   ────────────────────────────────────────────────────────────── */
+
+/* Navbar inner padding + mobile-only / desktop-only pieces */
+.nav-inner { padding: 0 24px; }
+.nav-hamburger { display: none; }
+.nav-mobile-menu { display: none; }
+
+@media (max-width: 720px) {
+  .nav-inner { padding: 0 14px; }
+  /* collapse the inline desktop links; use the hamburger instead */
+  .nav-links { display: none !important; }
+  .nav-price { display: none !important; }
+  .nav-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(99,102,241,0.25);
+    background: rgba(99,102,241,0.08);
+    color: #a5b4fc;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  .nav-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 14px 14px;
+    gap: 4px;
+    border-top: 1px solid rgba(99,102,241,0.12);
+    background: rgba(13,14,20,0.97);
+  }
+  .nav-mobile-menu .nav-link { padding: 12px 14px; font-size: 15px; }
+}
+
+/* Liquidity "new" page: two columns on desktop, stack on mobile */
+.lp-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .lp-two-col { grid-template-columns: 1fr; }
+}
+
+/* A header row (title + action button) that stacks on small screens */
+.page-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+@media (max-width: 560px) {
+  .page-header-row { flex-direction: column; align-items: stretch; }
+  .page-header-row .btn-primary { width: 100%; }
+}

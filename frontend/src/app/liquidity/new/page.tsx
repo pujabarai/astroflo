@@ -298,7 +298,7 @@ export default function AddLiquidityPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.55fr) minmax(0,1fr)", gap: 16, alignItems: "start" }}>
+      <div className="lp-two-col">
         {/* ── Left: Set Price Range ── */}
         <div className="glass-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
