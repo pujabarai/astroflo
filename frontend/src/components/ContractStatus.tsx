@@ -47,7 +47,9 @@ export default function ContractStatus() {
     };
   }, []);
 
-  const shortId = `${CONTRACT_ID.slice(0, 6)}…${CONTRACT_ID.slice(-6)}`;
+  const shortId = CONTRACT_ID
+    ? `${CONTRACT_ID.slice(0, 6)}…${CONTRACT_ID.slice(-6)}`
+    : "not configured";
 
   return (
     <div className="glass-card" style={{ padding: 20, marginBottom: 32 }}>
