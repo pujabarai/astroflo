@@ -1746,6 +1746,3 @@ Explore the pool's deploy + interaction transaction hashes on
 --target wasm32-unknown-unknown --release` produces 4 contract wasms.
 
 ---
-### Referance 
-
-https://raydium.io/swap/?inputMint=sol&outputMint=4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R
