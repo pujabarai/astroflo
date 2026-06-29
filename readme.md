@@ -45,6 +45,14 @@
 15. [Security Considerations](#15-security-considerations)
 16. [Known Limitations & Future Work](#16-known-limitations--future-work)
 17. [Glossary](#17-glossary)
+18. [Wallet Integration (Freighter)](#18-wallet-integration-freighter)
+19. [Event Streaming & Real-Time Updates](#19-event-streaming--real-time-updates)
+20. [Testing — Run & Outputs](#20-testing--run--outputs)
+21. [CI/CD Pipeline](#21-cicd-pipeline)
+22. [Deployment & Rollback](#22-deployment--rollback)
+23. [Environment Variables](#23-environment-variables)
+24. [Troubleshooting](#24-troubleshooting)
+25. [Deployment Evidence](#25-deployment-evidence)
 
 ---
 
@@ -1524,6 +1532,218 @@ The factory allows anyone to set the initial price when deploying a pool. The fi
 | **Price impact** | How much a specific trade moves the pool price, expressed as a percentage |
 | **Slot0** | Pool's core hot state: sqrtPriceX96, currentTick, fee, unlocked flag |
 | **Q64.96** | Fixed-point number format with 64 integer bits and 96 fractional bits |
+
+---
+
+## 18. Wallet Integration (Freighter)
+
+The app integrates the [Freighter](https://freighter.app) browser wallet on
+**Stellar testnet**. The integration is split into a small, explicit set of
+files so the wallet flow is easy to audit:
+
+| File | Responsibility |
+|---|---|
+| `frontend/src/lib/stellar-wallet.ts` | Explicit `@stellar/freighter-api` calls: `detectFreighter` (`isConnected`), `connectWallet` (`isAllowed` + `setAllowed` + `requestAccess` + `getAddress`), `getWalletAddress`, `signTx` (`signTransaction`). Exports `STELLAR_TESTNET_PASSPHRASE`, `HORIZON_TESTNET_URL`. |
+| `frontend/src/lib/stellar-payments.ts` | Horizon helpers: `fetchXlmBalance` (GET `/accounts/{id}`, 404 → `0`), `buildPaymentXdr` (native payment, `setTimeout(30)`), `submitSignedTx` → `{ hash }`. |
+| `frontend/src/hooks/use-stellar-wallet.ts` | `useStellarWallet()` → `{ address, balance, isConnected, isLoading, error, hasFreighter, connect, disconnect, refreshBalance, sendXlm }`. |
+| `frontend/src/components/wallet/StellarWalletPanel.tsx` | UI: install prompt → connect → address + balance (+ refresh) → Send-XLM form → tx hash with stellar.expert link. |
+
+**Flow:** detect → connect → fetch XLM balance from Horizon → send a native
+payment (build → sign with Freighter → submit) → display the transaction hash
+linking to `stellar.expert/explorer/testnet/tx/<hash>`. The panel is rendered on
+the **Portfolio** page. The DEX swap/liquidity flows sign Soroban contract
+invocations through the same Freighter `signTransaction` API (see
+`frontend/src/hooks/useWallet.ts` + `frontend/src/lib/transactions.ts`).
+
+The `contract.ts` ⇄ pool function mapping (every public pool method has a
+frontend counterpart) is enumerated in `frontend/src/lib/contract.ts`
+(`CONTRACT_FUNCTION_MAP`), and `frontend/src/components/ContractStatus.tsx`
+reads live `slot0` / `fee` / `liquidity` through that layer.
+
+---
+
+## 19. Event Streaming & Real-Time Updates
+
+### On-chain events
+Each state-changing contract action publishes a Soroban event
+(`contracts/pool/src/events.rs`, `contracts/factory/src/events.rs`):
+
+| Contract | Event | Emitted on |
+|---|---|---|
+| pool | `swap` | every `swap` (amounts, new sqrt price, tick) |
+| pool | `mint` | liquidity added to a range |
+| pool | `burn` | liquidity removed |
+| pool | `collect` | fees/tokens withdrawn |
+| factory | `pool_created` | a new pool is deployed |
+
+### Frontend real-time model
+The UI stays in sync with on-chain state via **TanStack Query** polling +
+invalidation rather than a long-lived socket (Soroban RPC has no native event
+push for the browser):
+
+- `usePool`, `usePositions`, `useBalances`, `usePoolStats` poll the RPC on an
+  interval (`refetchInterval`) and expose `isLoading` / `isError` for skeletons
+  and error states.
+- After a user transaction succeeds, the relevant queries are invalidated
+  (`queryClient.invalidateQueries`) so balances/positions refresh immediately
+  instead of waiting for the next poll.
+- `ContractStatus` re-reads `slot0`/`liquidity` on mount; live market price uses
+  the Coinbase/CoinGecko feed in `lib/marketData.ts`.
+- **Reconnection/sync:** Query retries with backoff on RPC failure; on window
+  refocus/reconnect, stale queries refetch automatically (Query defaults), so a
+  dropped connection self-heals without a reload.
+
+---
+
+## 20. Testing — Run & Outputs
+
+### Smart-contract tests (Rust / `soroban_sdk::testutils`)
+```bash
+cd contracts
+make test            # or: cargo test
+```
+```
+running 7 tests
+test test::test_mul_div_ceil_rounds_up ... ok
+test test::test_liquidity_amounts_roundtrip ... ok
+test test::test_mul_div_basic ... ok
+test test::test_sqrt_u128 ... ok
+test test::test_wide_mul_high_low ... ok
+test test::test_tick_sqrt_price_roundtrip ... ok
+test test::test_pool_constructor_and_reads ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out
+```
+- 6 unit tests: Q64.64 fixed-point (`mul_div`, `mul_div_ceil`, `wide_mul`,
+  `sqrt_u128`) and tick ↔ sqrt-price conversions.
+- 1 integration test: deploys the pool in a test `Env` and asserts constructor
+  wiring + `slot0` reads (`contracts/pool/src/test.rs`).
+
+### Frontend tests (Vitest + Testing Library)
+```bash
+cd frontend
+npm run test         # vitest run
+```
+```
+ Test Files  2 passed (2)
+      Tests  11 passed (11)
+```
+- `src/lib/math.test.ts` — 8 unit tests for stroop conversion, USD/amount
+  formatting, and tick math.
+- `src/components/wallet/StellarWalletPanel.test.tsx` — 3 component tests
+  (install prompt / connect button / connected balance + send form) with the
+  wallet hook mocked.
+
+---
+
+## 21. CI/CD Pipeline
+
+Two GitHub Actions workflows in `.github/workflows/`:
+
+### `ci.yml` — runs on every push & pull request to `main`
+| Job | Steps |
+|---|---|
+| **contracts** | checkout → install Rust + `wasm32-unknown-unknown` → `cargo fmt --check` → `cargo test` → `cargo build --target wasm32-unknown-unknown --release` → upload wasm artifacts |
+| **frontend** | checkout → `setup-node@v4` (npm cache) → `npm ci` → `npm run lint` → `npm run typecheck` → `npm run test:ci` → `npm run build` → upload `.next` artifact |
+
+The build fails if **any** step fails (lint error, type error, failing test, or
+broken build), satisfying "fails correctly when errors occur." Both jobs produce
+downloadable artifacts (contract wasm + frontend build).
+
+### `deploy.yml` — runs on push to `main` (and manual dispatch)
+| Job | Steps |
+|---|---|
+| **deploy-contract** | install Rust + wasm target → `cargo install --locked stellar-cli` → build wasm → `stellar contract deploy` (factory) using `secrets.STELLAR_SECRET_KEY`, network testnet → expose `factory_id` output |
+| **deploy-frontend** | `needs: [deploy-contract]` → `npm ci` → `npm run build` with `NEXT_PUBLIC_*` from secrets → `vercel deploy --prod` with `secrets.VERCEL_TOKEN` |
+
+---
+
+## 22. Deployment & Rollback
+
+### Contracts (testnet)
+Full automated wiring (deploy factory → pool impl → router → position manager →
+init factory → create pool → seed liquidity) lives in
+[`scripts/redeploy.sh`](scripts/redeploy.sh). Single contract:
+```bash
+cd contracts
+make deploy CONTRACT=pool STELLAR_SECRET_KEY=S...   # or stellar contract deploy ...
+```
+
+### Frontend (Vercel)
+Set the `NEXT_PUBLIC_*` variables (see §23) in **Vercel → Settings →
+Environment Variables**, then `vercel --prod` (or the `deploy-frontend` job).
+`NEXT_PUBLIC_*` values are **inlined at build time** — change them ⇒ rebuild.
+
+### Rollback
+- **Frontend:** Vercel keeps every deployment immutable — use *Instant Rollback*
+  (or `vercel rollback <url>`) to repoint the alias to a previous build.
+- **Contracts:** Soroban deploys are immutable per contract id. To roll back,
+  re-point the frontend `NEXT_PUBLIC_*_ADDRESS` at the previous known-good
+  contract ids and redeploy the frontend. Contract upgrades (where enabled) go
+  through `stellar contract invoke ... upgrade` with the prior wasm hash.
+
+### Verification
+After deploy: open `/portfolio` → the **On-chain Pool State** card reads live
+`slot0`/`fee`/`liquidity` (proves contract reads work), connect Freighter, and
+run a swap — the tx hash links to stellar.expert.
+
+---
+
+## 23. Environment Variables
+
+Frontend (`frontend/.env.local` locally, Vercel env in prod):
+
+| Variable | Example | Notes |
+|---|---|---|
+| `NEXT_PUBLIC_SOROBAN_RPC_URL` | `https://soroban-testnet.stellar.org` | Soroban RPC |
+| `NEXT_PUBLIC_NETWORK_PASSPHRASE` | `Test SDF Network ; September 2015` | testnet |
+| `NEXT_PUBLIC_FACTORY_ADDRESS` | `C…` | factory contract id |
+| `NEXT_PUBLIC_POOL_ADDRESS` | `C…` | XLM/USDC pool id |
+| `NEXT_PUBLIC_ROUTER_ADDRESS` | `C…` | router id |
+| `NEXT_PUBLIC_POSITION_MANAGER_ADDRESS` | `C…` | position manager id |
+| `NEXT_PUBLIC_XLM_ADDRESS` | `C…` | XLM SAC |
+| `NEXT_PUBLIC_USDC_ADDRESS` | `C…` | USDC SAC |
+
+Contracts / CI secrets: `STELLAR_SECRET_KEY` (funded testnet secret),
+`VERCEL_TOKEN`, plus the `NEXT_PUBLIC_*` values as GitHub Actions secrets for the
+deploy job. Template: `frontend/.env.example`, `.env.testnet`.
+
+---
+
+## 24. Troubleshooting
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Deployed site shows **no tick / liquidity / positions** | `NEXT_PUBLIC_*` not set in Vercel (they inline at build time). | Add them in Vercel → Settings → Environment Variables, then **redeploy with build cache off**. |
+| "Freighter not detected" | Extension missing/locked. | Install from freighter.app; unlock; set network to Testnet. |
+| Swap/mint fails with auth error | Pool spend not approved. | The UI builds an `approve` before the swap/mint; ensure it's signed first. |
+| Balance shows `0 XLM (account not funded)` | Testnet account not created. | Fund via [friendbot](https://friendbot.stellar.org). |
+| `cargo test` can't find `wasm32` target | Target not installed. | `rustup target add wasm32-unknown-unknown`. |
+| CI `npm ci` fails | `package-lock.json` out of sync. | Commit the updated lockfile. |
+
+---
+
+## 25. Deployment Evidence
+
+**Network:** Stellar Testnet · `Test SDF Network ; September 2015`
+
+| Contract | Address (testnet) |
+|---|---|
+| Factory | `CDFY5UX77PQDP2QGNY4YGZVKK6FE6J2LSSVZFXTQSHRO2JIES7LSZGPE` |
+| Pool (XLM/USDC 0.3%) | `CCYBX2FOT5RWL6T2CQROAA3ZECYNNE3PSJ7WQXULU6AJOCCK6YHSTH32` |
+| Router | `CDLCGPUP7NW4B4SSFG5H4I75PKDGPUZDHOX5C6YICJY7RDJ7VP7BAT62` |
+| Position Manager | `CC6IBQ7VNVK7CQYIZX47NJPDH5DL5ISQSA26BLBZXVMVEQ3QGUAZDREI` |
+| XLM (SAC) | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
+| USDC (SAC) | `CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA` |
+
+Explore the pool's deploy + interaction transaction hashes on
+[stellar.expert](https://stellar.expert/explorer/testnet/contract/CCYBX2FOT5RWL6T2CQROAA3ZECYNNE3PSJ7WQXULU6AJOCCK6YHSTH32)
+(Contract → History tab lists every invocation hash). Live frontend:
+[astroflo.vercel.app](https://astroflo.vercel.app).
+
+**Test evidence:** 7 passing contract tests + 11 passing frontend tests (§20).
+**Build evidence:** `npm run build` prerenders all 6 routes; `cargo build
+--target wasm32-unknown-unknown --release` produces 4 contract wasms.
 
 ---
 ### Referance 
