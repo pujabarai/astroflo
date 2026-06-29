@@ -1653,8 +1653,14 @@ downloadable artifacts (contract wasm + frontend build).
 ### `deploy.yml` — runs on push to `main` (and manual dispatch)
 | Job | Steps |
 |---|---|
-| **deploy-contract** | install Rust + wasm target → `cargo install --locked stellar-cli` → build wasm → `stellar contract deploy` (factory) using `secrets.STELLAR_SECRET_KEY`, network testnet → expose `factory_id` output |
+| **deploy-contract** | install Rust + wasm target → install `libdbus-1-dev`/`libudev-dev` → install Stellar CLI via `cargo-binstall` (prebuilt binary) → build wasm → `stellar contract deploy` (factory) using `secrets.STELLAR_SECRET_KEY`, network testnet → expose `factory_id` output |
 | **deploy-frontend** | `needs: [deploy-contract]` → `npm ci` → `npm run build` with `NEXT_PUBLIC_*` from secrets → `vercel deploy --prod` with `secrets.VERCEL_TOKEN` |
+
+> **Secret-gated deploys:** the deploy steps **skip cleanly** (warn + exit 0)
+> when `STELLAR_SECRET_KEY` / `VERCEL_TOKEN` aren't set, so pushes stay green
+> until the secrets are configured in the `testnet` / `production` environments.
+> The Stellar CLI is installed as a prebuilt binary via `cargo-binstall` to avoid
+> compiling native deps (`hidapi`, `libdbus-sys`); the apt libs are a fallback.
 
 ---
 
