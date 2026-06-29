@@ -86,4 +86,5 @@ jobs:
         with:
           name: frontend-build
           path: frontend/.next
+          include-hidden-files: true
           if-no-files-found: error
