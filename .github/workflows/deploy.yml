@@ -51,9 +51,13 @@ jobs:
         env:
           STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
         run: |
+          if [ -z "$STELLAR_SECRET_KEY" ]; then
+            echo "::error::STELLAR_SECRET_KEY is not set. Add it as a secret in the 'testnet' environment (Settings → Environments → testnet → Secrets)." >&2
+            exit 1
+          fi
           FACTORY_ID=$(stellar contract deploy \
             --wasm target/wasm32-unknown-unknown/release/factory.wasm \
-            --source "$STELLAR_SECRET_KEY" \
+            --source-account "$STELLAR_SECRET_KEY" \
             --network testnet)
           echo "Deployed factory: $FACTORY_ID"
           echo "factory_id=$FACTORY_ID" >> "$GITHUB_OUTPUT"
