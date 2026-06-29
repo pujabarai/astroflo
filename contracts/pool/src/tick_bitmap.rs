@@ -6,12 +6,19 @@ enum BitmapKey {
 }
 
 fn get_word(env: &Env, word_pos: i32) -> u128 {
-    env.storage().persistent().get(&BitmapKey::Word(word_pos)).unwrap_or(0u128)
+    env.storage()
+        .persistent()
+        .get(&BitmapKey::Word(word_pos))
+        .unwrap_or(0u128)
 }
 
 fn set_word(env: &Env, word_pos: i32, word: u128) {
-    env.storage().persistent().set(&BitmapKey::Word(word_pos), &word);
-    env.storage().persistent().extend_ttl(&BitmapKey::Word(word_pos), 200_000, 200_000);
+    env.storage()
+        .persistent()
+        .set(&BitmapKey::Word(word_pos), &word);
+    env.storage()
+        .persistent()
+        .extend_ttl(&BitmapKey::Word(word_pos), 200_000, 200_000);
 }
 
 /// (word_pos, bit_pos) from a tick that is already a multiple of tick_spacing

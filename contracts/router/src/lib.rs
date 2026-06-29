@@ -1,8 +1,8 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contractimpl, contracttype, Address, Env, token, Symbol, Vec,
-    symbol_short, vec, IntoVal, FromVal,
+    contract, contractimpl, contracttype, symbol_short, token, vec, Address, Env, FromVal, IntoVal,
+    Symbol, Vec,
 };
 
 mod storage;
@@ -39,11 +39,8 @@ impl RouterContract {
         let pool_address = get_pool_addr(&env, &token_in, &token_out, fee);
 
         // Determine zero_for_one by asking the pool for token_0
-        let token_0: Address = env.invoke_contract(
-            &pool_address,
-            &Symbol::new(&env, "token_0"),
-            vec![&env],
-        );
+        let token_0: Address =
+            env.invoke_contract(&pool_address, &Symbol::new(&env, "token_0"), vec![&env]);
         let zero_for_one = token_in == token_0;
 
         // Default price limit (just inside min/max)
@@ -112,15 +109,16 @@ impl RouterContract {
 
         let pool_address = get_pool_addr(&env, &token_in, &token_out, fee);
 
-        let token_0: Address = env.invoke_contract(
-            &pool_address,
-            &Symbol::new(&env, "token_0"),
-            vec![&env],
-        );
+        let token_0: Address =
+            env.invoke_contract(&pool_address, &Symbol::new(&env, "token_0"), vec![&env]);
         let zero_for_one = token_in == token_0;
 
         let price_limit = if sqrt_price_limit_x64 == 0 {
-            if zero_for_one { 72057594037927937u128 } else { 4722366482869645213695u128 }
+            if zero_for_one {
+                72057594037927937u128
+            } else {
+                4722366482869645213695u128
+            }
         } else {
             sqrt_price_limit_x64
         };
@@ -146,7 +144,11 @@ impl RouterContract {
 
         let (amount_0, amount_1): (i128, i128) = FromVal::from_val(&env, &result);
 
-        let amount_in_spent = if zero_for_one { amount_0 as u128 } else { amount_1 as u128 };
+        let amount_in_spent = if zero_for_one {
+            amount_0 as u128
+        } else {
+            amount_1 as u128
+        };
         assert!(amount_in_spent <= amount_in_maximum, "too much spent");
         amount_in_spent
     }
@@ -160,7 +162,12 @@ impl RouterContract {
         let result: soroban_sdk::Val = env.invoke_contract(
             &factory,
             &Symbol::new(&env, "get_pool"),
-            vec![&env, token_a.into_val(&env), token_b.into_val(&env), fee.into_val(&env)],
+            vec![
+                &env,
+                token_a.into_val(&env),
+                token_b.into_val(&env),
+                fee.into_val(&env),
+            ],
         );
         FromVal::from_val(&env, &result)
     }
@@ -171,7 +178,12 @@ fn get_pool_addr(env: &Env, token_in: &Address, token_out: &Address, fee: u32) -
     let result: soroban_sdk::Val = env.invoke_contract(
         &factory,
         &Symbol::new(env, "get_pool"),
-        vec![env, token_in.clone().into_val(env), token_out.clone().into_val(env), fee.into_val(env)],
+        vec![
+            env,
+            token_in.clone().into_val(env),
+            token_out.clone().into_val(env),
+            fee.into_val(env),
+        ],
     );
     let opt: Option<Address> = FromVal::from_val(env, &result);
     opt.expect("pool not found")

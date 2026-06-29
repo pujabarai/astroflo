@@ -1,5 +1,5 @@
-use soroban_sdk::{contracttype, Address, Env};
 use crate::math::fixed_point::{mul_div, Q64};
+use soroban_sdk::{contracttype, Address, Env};
 
 #[contracttype]
 #[derive(Clone, Debug)]
@@ -46,7 +46,9 @@ pub fn write_position(
         tick_upper,
     });
     env.storage().persistent().set(&key, info);
-    env.storage().persistent().extend_ttl(&key, 200_000, 200_000);
+    env.storage()
+        .persistent()
+        .extend_ttl(&key, 200_000, 200_000);
 }
 
 /// Update a position's liquidity and settle owed fees.
@@ -67,8 +69,14 @@ pub fn update_position(
     let tokens_owed_0 = mul_div(pos.liquidity, delta_0, Q64);
     let tokens_owed_1 = mul_div(pos.liquidity, delta_1, Q64);
 
-    pos.tokens_owed_0 = pos.tokens_owed_0.checked_add(tokens_owed_0).unwrap_or(u128::MAX);
-    pos.tokens_owed_1 = pos.tokens_owed_1.checked_add(tokens_owed_1).unwrap_or(u128::MAX);
+    pos.tokens_owed_0 = pos
+        .tokens_owed_0
+        .checked_add(tokens_owed_0)
+        .unwrap_or(u128::MAX);
+    pos.tokens_owed_1 = pos
+        .tokens_owed_1
+        .checked_add(tokens_owed_1)
+        .unwrap_or(u128::MAX);
 
     if liquidity_delta != 0 {
         pos.liquidity = if liquidity_delta >= 0 {

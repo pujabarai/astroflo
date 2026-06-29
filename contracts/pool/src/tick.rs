@@ -24,7 +24,9 @@ pub fn get_tick(env: &Env, tick: i32) -> TickInfo {
 
 pub fn write_tick(env: &Env, tick: i32, info: &TickInfo) {
     env.storage().persistent().set(&TickKey::Tick(tick), info);
-    env.storage().persistent().extend_ttl(&TickKey::Tick(tick), 200_000, 200_000);
+    env.storage()
+        .persistent()
+        .extend_ttl(&TickKey::Tick(tick), 200_000, 200_000);
 }
 
 /// Update tick info when adding or removing liquidity.
@@ -64,9 +66,13 @@ pub fn update_tick(
 
     info.liquidity_gross = liquidity_gross_after;
     info.liquidity_net = if upper {
-        info.liquidity_net.checked_sub(liquidity_delta).expect("overflow")
+        info.liquidity_net
+            .checked_sub(liquidity_delta)
+            .expect("overflow")
     } else {
-        info.liquidity_net.checked_add(liquidity_delta).expect("overflow")
+        info.liquidity_net
+            .checked_add(liquidity_delta)
+            .expect("overflow")
     };
 
     if liquidity_gross_after == 0 {
@@ -91,10 +97,8 @@ pub fn cross_tick(
     fee_growth_global_1: u128,
 ) -> i128 {
     let mut info = get_tick(env, tick);
-    info.fee_growth_outside_0 = fee_growth_global_0
-        .wrapping_sub(info.fee_growth_outside_0);
-    info.fee_growth_outside_1 = fee_growth_global_1
-        .wrapping_sub(info.fee_growth_outside_1);
+    info.fee_growth_outside_0 = fee_growth_global_0.wrapping_sub(info.fee_growth_outside_0);
+    info.fee_growth_outside_1 = fee_growth_global_1.wrapping_sub(info.fee_growth_outside_1);
     write_tick(env, tick, &info);
     info.liquidity_net
 }

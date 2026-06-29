@@ -1,5 +1,5 @@
-use soroban_sdk::{contracttype, Address, Env, Vec, vec};
 use crate::PositionMetadata;
+use soroban_sdk::{contracttype, vec, Address, Env, Vec};
 
 #[contracttype]
 enum DataKey {
@@ -35,8 +35,12 @@ pub fn read_next_id(env: &Env) -> u128 {
 }
 
 pub fn write_position_metadata(env: &Env, id: u128, meta: &PositionMetadata) {
-    env.storage().persistent().set(&DataKey::PositionMeta(id), meta);
-    env.storage().persistent().extend_ttl(&DataKey::PositionMeta(id), 200_000, 200_000);
+    env.storage()
+        .persistent()
+        .set(&DataKey::PositionMeta(id), meta);
+    env.storage()
+        .persistent()
+        .extend_ttl(&DataKey::PositionMeta(id), 200_000, 200_000);
 }
 
 pub fn read_position_metadata(env: &Env, id: u128) -> PositionMetadata {
@@ -47,14 +51,22 @@ pub fn read_position_metadata(env: &Env, id: u128) -> PositionMetadata {
 }
 
 pub fn remove_position_metadata(env: &Env, id: u128) {
-    env.storage().persistent().remove(&DataKey::PositionMeta(id));
+    env.storage()
+        .persistent()
+        .remove(&DataKey::PositionMeta(id));
 }
 
 pub fn add_position_to_owner(env: &Env, owner: &Address, id: u128) {
     let mut positions = get_owner_positions(env, owner);
     positions.push_back(id);
-    env.storage().persistent().set(&DataKey::OwnerPositions(owner.clone()), &positions);
-    env.storage().persistent().extend_ttl(&DataKey::OwnerPositions(owner.clone()), 200_000, 200_000);
+    env.storage()
+        .persistent()
+        .set(&DataKey::OwnerPositions(owner.clone()), &positions);
+    env.storage().persistent().extend_ttl(
+        &DataKey::OwnerPositions(owner.clone()),
+        200_000,
+        200_000,
+    );
 }
 
 pub fn remove_position_from_owner(env: &Env, owner: &Address, id: u128) {
@@ -66,7 +78,9 @@ pub fn remove_position_from_owner(env: &Env, owner: &Address, id: u128) {
             updated.push_back(pos_id);
         }
     }
-    env.storage().persistent().set(&DataKey::OwnerPositions(owner.clone()), &updated);
+    env.storage()
+        .persistent()
+        .set(&DataKey::OwnerPositions(owner.clone()), &updated);
 }
 
 pub fn get_owner_positions(env: &Env, owner: &Address) -> Vec<u128> {

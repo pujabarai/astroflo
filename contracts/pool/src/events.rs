@@ -1,4 +1,4 @@
-use soroban_sdk::{Address, Env, symbol_short};
+use soroban_sdk::{symbol_short, Address, Env};
 
 pub fn emit_swap(
     env: &Env,

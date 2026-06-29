@@ -1,4 +1,4 @@
-use soroban_sdk::{Address, Env, Symbol, symbol_short};
+use soroban_sdk::{symbol_short, Address, Env, Symbol};
 
 pub fn emit_pool_created(
     env: &Env,

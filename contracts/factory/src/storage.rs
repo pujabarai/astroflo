@@ -34,15 +34,23 @@ pub fn write_pool_wasm_hash(env: &Env, hash: &BytesN<32>) {
 }
 
 pub fn read_pool_wasm_hash(env: &Env) -> BytesN<32> {
-    env.storage().instance().get(&DataKey::PoolWasmHash).unwrap()
+    env.storage()
+        .instance()
+        .get(&DataKey::PoolWasmHash)
+        .unwrap()
 }
 
 pub fn write_fee_recipient(env: &Env, recipient: &Address) {
-    env.storage().instance().set(&DataKey::FeeRecipient, recipient);
+    env.storage()
+        .instance()
+        .set(&DataKey::FeeRecipient, recipient);
 }
 
 pub fn read_fee_recipient(env: &Env) -> Address {
-    env.storage().instance().get(&DataKey::FeeRecipient).unwrap()
+    env.storage()
+        .instance()
+        .get(&DataKey::FeeRecipient)
+        .unwrap()
 }
 
 pub fn write_protocol_fee(env: &Env, fee: u32) {
@@ -50,11 +58,16 @@ pub fn write_protocol_fee(env: &Env, fee: u32) {
 }
 
 pub fn read_protocol_fee(env: &Env) -> u32 {
-    env.storage().instance().get(&DataKey::ProtocolFee).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::ProtocolFee)
+        .unwrap_or(0)
 }
 
 pub fn write_pool(env: &Env, key: &PoolKey, address: &Address) {
-    env.storage().persistent().set(&DataKey::Pool(key.clone()), address);
+    env.storage()
+        .persistent()
+        .set(&DataKey::Pool(key.clone()), address);
 }
 
 pub fn get_pool(env: &Env, key: &PoolKey) -> Option<Address> {

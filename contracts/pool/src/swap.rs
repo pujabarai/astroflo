@@ -18,7 +18,9 @@ pub fn compute_swap_step(
     if liquidity == 0 {
         return SwapStepResult {
             sqrt_price_next_x64: sqrt_price_target_x64,
-            amount_in: 0, amount_out: 0, fee_amount: 0,
+            amount_in: 0,
+            amount_out: 0,
+            fee_amount: 0,
         };
     }
 
@@ -33,16 +35,31 @@ pub fn compute_swap_step(
         );
 
         let max_amount_in = if zero_for_one {
-            amount_0_delta(sqrt_price_target_x64, sqrt_price_current_x64, liquidity, true)
+            amount_0_delta(
+                sqrt_price_target_x64,
+                sqrt_price_current_x64,
+                liquidity,
+                true,
+            )
         } else {
-            amount_1_delta(sqrt_price_current_x64, sqrt_price_target_x64, liquidity, true)
+            amount_1_delta(
+                sqrt_price_current_x64,
+                sqrt_price_target_x64,
+                liquidity,
+                true,
+            )
         };
 
         let full_fill = amount_after_fee >= max_amount_in;
         let (sqrt_next, amount_in_used) = if full_fill {
             (sqrt_price_target_x64, max_amount_in)
         } else {
-            let next = next_sqrt_from_input(sqrt_price_current_x64, liquidity, amount_after_fee, zero_for_one);
+            let next = next_sqrt_from_input(
+                sqrt_price_current_x64,
+                liquidity,
+                amount_after_fee,
+                zero_for_one,
+            );
             (next, amount_after_fee)
         };
 
@@ -74,9 +91,19 @@ pub fn compute_swap_step(
         let amount_out_wanted = (-amount_remaining) as u128;
 
         let max_amount_out = if zero_for_one {
-            amount_1_delta(sqrt_price_target_x64, sqrt_price_current_x64, liquidity, false)
+            amount_1_delta(
+                sqrt_price_target_x64,
+                sqrt_price_current_x64,
+                liquidity,
+                false,
+            )
         } else {
-            amount_0_delta(sqrt_price_current_x64, sqrt_price_target_x64, liquidity, false)
+            amount_0_delta(
+                sqrt_price_current_x64,
+                sqrt_price_target_x64,
+                liquidity,
+                false,
+            )
         };
 
         let amount_out = amount_out_wanted.min(max_amount_out);
@@ -91,7 +118,11 @@ pub fn compute_swap_step(
         } else {
             amount_1_delta(sqrt_price_current_x64, sqrt_next, liquidity, true)
         };
-        let fee = mul_div_ceil(amount_in, fee_rate as u128, (1_000_000u64 - fee_rate as u64) as u128);
+        let fee = mul_div_ceil(
+            amount_in,
+            fee_rate as u128,
+            (1_000_000u64 - fee_rate as u64) as u128,
+        );
 
         SwapStepResult {
             sqrt_price_next_x64: sqrt_next,
@@ -104,8 +135,12 @@ pub fn compute_swap_step(
 
 // amount0 = L * (sqrt_hi - sqrt_lo) / (sqrt_lo * sqrt_hi) — in Q64.64 units
 fn amount_0_delta(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128, round_up: bool) -> u128 {
-    if sqrt_lo >= sqrt_hi { return 0; }
-    let num1 = liquidity.checked_shl(64).expect("liquidity too large for Q64 shift");
+    if sqrt_lo >= sqrt_hi {
+        return 0;
+    }
+    let num1 = liquidity
+        .checked_shl(64)
+        .expect("liquidity too large for Q64 shift");
     let num2 = sqrt_hi - sqrt_lo;
     if round_up {
         mul_div_ceil(mul_div(num1, num2, sqrt_hi), 1, sqrt_lo)
@@ -116,7 +151,9 @@ fn amount_0_delta(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128, round_up: bool)
 
 // amount1 = L * (sqrt_hi - sqrt_lo) / 2^64
 fn amount_1_delta(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128, round_up: bool) -> u128 {
-    if sqrt_lo >= sqrt_hi { return 0; }
+    if sqrt_lo >= sqrt_hi {
+        return 0;
+    }
     if round_up {
         mul_div_ceil(liquidity, sqrt_hi - sqrt_lo, Q64)
     } else {
@@ -124,12 +161,19 @@ fn amount_1_delta(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128, round_up: bool)
     }
 }
 
-fn next_sqrt_from_input(sqrt_p: u128, liquidity: u128, amount_in: u128, zero_for_one: bool) -> u128 {
+fn next_sqrt_from_input(
+    sqrt_p: u128,
+    liquidity: u128,
+    amount_in: u128,
+    zero_for_one: bool,
+) -> u128 {
     if zero_for_one {
         // new_sqrt = L * sqrt_p / (L + amount0 * sqrt_p / 2^64)
         let lq = mul_div(liquidity, sqrt_p, Q64);
         let amt_scaled = mul_div(amount_in, sqrt_p, Q64);
-        let denom = liquidity.checked_add(amt_scaled).expect("liquidity+amt_scaled overflow");
+        let denom = liquidity
+            .checked_add(amt_scaled)
+            .expect("liquidity+amt_scaled overflow");
         mul_div(lq, Q64, denom)
     } else {
         // new_sqrt = sqrt_p + amount1 / L
@@ -137,17 +181,28 @@ fn next_sqrt_from_input(sqrt_p: u128, liquidity: u128, amount_in: u128, zero_for
     }
 }
 
-fn next_sqrt_from_output(sqrt_p: u128, liquidity: u128, amount_out: u128, zero_for_one: bool) -> u128 {
+fn next_sqrt_from_output(
+    sqrt_p: u128,
+    liquidity: u128,
+    amount_out: u128,
+    zero_for_one: bool,
+) -> u128 {
     if zero_for_one {
         // Selling token0, receiving token1 out: new_sqrt = sqrt_p - amount1 / L
         let delta = mul_div(amount_out, Q64, liquidity);
-        assert!(delta <= sqrt_p, "amount_out too large: underflows sqrt_price");
+        assert!(
+            delta <= sqrt_p,
+            "amount_out too large: underflows sqrt_price"
+        );
         sqrt_p - delta
     } else {
         // Buying token0 out: new_sqrt = L * sqrt_p / (L - amount0 * sqrt_p / Q64)
         let lq = mul_div(liquidity, sqrt_p, Q64);
         let amt_scaled = mul_div(amount_out, sqrt_p, Q64);
-        assert!(amt_scaled < liquidity, "amount_out too large: exceeds available liquidity");
+        assert!(
+            amt_scaled < liquidity,
+            "amount_out too large: exceeds available liquidity"
+        );
         mul_div(lq, Q64, liquidity - amt_scaled)
     }
 }

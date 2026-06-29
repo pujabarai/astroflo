@@ -33,27 +33,42 @@ pub fn write_slot0(env: &Env, slot0: &Slot0) {
 }
 
 pub fn read_liquidity(env: &Env) -> u128 {
-    env.storage().instance().get(&DataKey::Liquidity).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::Liquidity)
+        .unwrap_or(0)
 }
 
 pub fn write_liquidity(env: &Env, liquidity: u128) {
-    env.storage().instance().set(&DataKey::Liquidity, &liquidity);
+    env.storage()
+        .instance()
+        .set(&DataKey::Liquidity, &liquidity);
 }
 
 pub fn read_fee_growth_global_0(env: &Env) -> u128 {
-    env.storage().instance().get(&DataKey::FeeGrowthGlobal0).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::FeeGrowthGlobal0)
+        .unwrap_or(0)
 }
 
 pub fn write_fee_growth_global_0(env: &Env, val: u128) {
-    env.storage().instance().set(&DataKey::FeeGrowthGlobal0, &val);
+    env.storage()
+        .instance()
+        .set(&DataKey::FeeGrowthGlobal0, &val);
 }
 
 pub fn read_fee_growth_global_1(env: &Env) -> u128 {
-    env.storage().instance().get(&DataKey::FeeGrowthGlobal1).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::FeeGrowthGlobal1)
+        .unwrap_or(0)
 }
 
 pub fn write_fee_growth_global_1(env: &Env, val: u128) {
-    env.storage().instance().set(&DataKey::FeeGrowthGlobal1, &val);
+    env.storage()
+        .instance()
+        .set(&DataKey::FeeGrowthGlobal1, &val);
 }
 
 pub fn read_token_0(env: &Env) -> Address {
@@ -90,32 +105,55 @@ pub fn initialize_storage(
     env.storage().instance().set(&DataKey::Token0, token_0);
     env.storage().instance().set(&DataKey::Token1, token_1);
     env.storage().instance().set(&DataKey::Fee, &fee);
-    env.storage().instance().set(&DataKey::TickSpacing, &tick_spacing);
-    env.storage().instance().set(&DataKey::Slot0, &Slot0 {
-        sqrt_price_x64,
-        tick: initial_tick,
-        fee_protocol: 0u32,
-        unlocked: true,
-    });
+    env.storage()
+        .instance()
+        .set(&DataKey::TickSpacing, &tick_spacing);
+    env.storage().instance().set(
+        &DataKey::Slot0,
+        &Slot0 {
+            sqrt_price_x64,
+            tick: initial_tick,
+            fee_protocol: 0u32,
+            unlocked: true,
+        },
+    );
     env.storage().instance().set(&DataKey::Liquidity, &0u128);
-    env.storage().instance().set(&DataKey::FeeGrowthGlobal0, &0u128);
-    env.storage().instance().set(&DataKey::FeeGrowthGlobal1, &0u128);
-    env.storage().instance().set(&DataKey::ProtocolFeesOwed0, &0u128);
-    env.storage().instance().set(&DataKey::ProtocolFeesOwed1, &0u128);
+    env.storage()
+        .instance()
+        .set(&DataKey::FeeGrowthGlobal0, &0u128);
+    env.storage()
+        .instance()
+        .set(&DataKey::FeeGrowthGlobal1, &0u128);
+    env.storage()
+        .instance()
+        .set(&DataKey::ProtocolFeesOwed0, &0u128);
+    env.storage()
+        .instance()
+        .set(&DataKey::ProtocolFeesOwed1, &0u128);
 }
 
 pub fn read_protocol_fees_owed_0(env: &Env) -> u128 {
-    env.storage().instance().get(&DataKey::ProtocolFeesOwed0).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::ProtocolFeesOwed0)
+        .unwrap_or(0)
 }
 
 pub fn write_protocol_fees_owed_0(env: &Env, val: u128) {
-    env.storage().instance().set(&DataKey::ProtocolFeesOwed0, &val);
+    env.storage()
+        .instance()
+        .set(&DataKey::ProtocolFeesOwed0, &val);
 }
 
 pub fn read_protocol_fees_owed_1(env: &Env) -> u128 {
-    env.storage().instance().get(&DataKey::ProtocolFeesOwed1).unwrap_or(0)
+    env.storage()
+        .instance()
+        .get(&DataKey::ProtocolFeesOwed1)
+        .unwrap_or(0)
 }
 
 pub fn write_protocol_fees_owed_1(env: &Env, val: u128) {
-    env.storage().instance().set(&DataKey::ProtocolFeesOwed1, &val);
+    env.storage()
+        .instance()
+        .set(&DataKey::ProtocolFeesOwed1, &val);
 }

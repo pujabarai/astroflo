@@ -1,8 +1,8 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contractimpl, contracttype, Address, Env, Vec, Symbol,
-    symbol_short, vec, IntoVal, FromVal,
+    contract, contractimpl, contracttype, symbol_short, vec, Address, Env, FromVal, IntoVal,
+    Symbol, Vec,
 };
 
 mod storage;
@@ -57,11 +57,8 @@ impl PositionManagerContract {
             params.tick_upper.into_val(&env),
             params.liquidity.into_val(&env),
         ];
-        let result: soroban_sdk::Val = env.invoke_contract(
-            &params.pool,
-            &Symbol::new(&env, "mint"),
-            args,
-        );
+        let result: soroban_sdk::Val =
+            env.invoke_contract(&params.pool, &Symbol::new(&env, "mint"), args);
         // The pool returns (u128, u128) — unpack it
         let pair: (u128, u128) = soroban_sdk::FromVal::from_val(&env, &result);
         let (amount_0, amount_1) = pair;
@@ -109,11 +106,8 @@ impl PositionManagerContract {
             meta.tick_upper.into_val(&env),
             liquidity.into_val(&env),
         ];
-        let result: soroban_sdk::Val = env.invoke_contract(
-            &meta.pool,
-            &Symbol::new(&env, "burn"),
-            args,
-        );
+        let result: soroban_sdk::Val =
+            env.invoke_contract(&meta.pool, &Symbol::new(&env, "burn"), args);
         let pair: (u128, u128) = soroban_sdk::FromVal::from_val(&env, &result);
         let (amount_0, amount_1) = pair;
 
@@ -141,11 +135,8 @@ impl PositionManagerContract {
             max_u128.into_val(&env),
             max_u128.into_val(&env),
         ];
-        let result: soroban_sdk::Val = env.invoke_contract(
-            &meta.pool,
-            &Symbol::new(&env, "collect"),
-            args,
-        );
+        let result: soroban_sdk::Val =
+            env.invoke_contract(&meta.pool, &Symbol::new(&env, "collect"), args);
         let pair: (u128, u128) = soroban_sdk::FromVal::from_val(&env, &result);
         pair
     }
@@ -158,10 +149,8 @@ impl PositionManagerContract {
         remove_position_metadata(&env, position_id);
         remove_position_from_owner(&env, &meta.owner, position_id);
 
-        env.events().publish(
-            (symbol_short!("pm_burn"), &meta.owner),
-            position_id,
-        );
+        env.events()
+            .publish((symbol_short!("pm_burn"), &meta.owner), position_id);
     }
 
     pub fn get_position(env: Env, position_id: u128) -> PositionMetadata {

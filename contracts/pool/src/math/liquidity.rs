@@ -37,15 +37,21 @@ pub fn get_liquidity_for_amounts(
 
 // amount0 = L * (sqrt_hi - sqrt_lo) / (sqrt_lo * sqrt_hi) in Q0 units
 fn amount_0(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128) -> u128 {
-    if sqrt_lo >= sqrt_hi { return 0; }
-    let num1 = liquidity.checked_shl(64).expect("liquidity too large for Q64 shift");
+    if sqrt_lo >= sqrt_hi {
+        return 0;
+    }
+    let num1 = liquidity
+        .checked_shl(64)
+        .expect("liquidity too large for Q64 shift");
     let num2 = sqrt_hi - sqrt_lo;
     mul_div(mul_div(num1, num2, sqrt_hi), 1, sqrt_lo)
 }
 
 // amount1 = L * (sqrt_hi - sqrt_lo) / 2^64
 fn amount_1(sqrt_lo: u128, sqrt_hi: u128, liquidity: u128) -> u128 {
-    if sqrt_lo >= sqrt_hi { return 0; }
+    if sqrt_lo >= sqrt_hi {
+        return 0;
+    }
     mul_div(liquidity, sqrt_hi - sqrt_lo, Q64)
 }
 

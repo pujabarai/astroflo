@@ -1,12 +1,11 @@
 #![no_std]
 
 use soroban_sdk::{
-    contract, contractimpl, contracttype, Address, BytesN, Env,
-    symbol_short, Symbol, Vec, IntoVal,
+    contract, contractimpl, contracttype, symbol_short, Address, BytesN, Env, IntoVal, Symbol, Vec,
 };
 
-mod storage;
 mod events;
+mod storage;
 
 use storage::*;
 
@@ -19,7 +18,11 @@ pub struct PoolKey {
 }
 
 pub fn sort_tokens(token_a: Address, token_b: Address) -> (Address, Address) {
-    if token_a < token_b { (token_a, token_b) } else { (token_b, token_a) }
+    if token_a < token_b {
+        (token_a, token_b)
+    } else {
+        (token_b, token_a)
+    }
 }
 
 #[contract]
@@ -56,7 +59,11 @@ impl FactoryContract {
         initial_sqrt_price_x64: u128,
     ) -> Address {
         let (token_0, token_1) = sort_tokens(token_a, token_b);
-        let key = PoolKey { token_0: token_0.clone(), token_1: token_1.clone(), fee };
+        let key = PoolKey {
+            token_0: token_0.clone(),
+            token_1: token_1.clone(),
+            fee,
+        };
 
         if get_pool(&env, &key).is_some() {
             panic!("pool exists");
@@ -67,17 +74,17 @@ impl FactoryContract {
         // Fixed zero salt — one pool per (token_0, token_1, fee) per factory.
         let salt: BytesN<32> = BytesN::from_array(&env, &[0u8; 32]);
 
-        let pool_address = env
-            .deployer()
-            .with_current_contract(salt)
-            .deploy_v2(pool_wasm_hash, (
+        let pool_address = env.deployer().with_current_contract(salt).deploy_v2(
+            pool_wasm_hash,
+            (
                 env.current_contract_address(),
                 token_0.clone(),
                 token_1.clone(),
                 fee,
                 tick_spacing,
                 initial_sqrt_price_x64,
-            ));
+            ),
+        );
 
         write_pool(&env, &key, &pool_address);
 
@@ -91,16 +98,21 @@ impl FactoryContract {
     /// Only the admin can call this.
     pub fn set_pool_price(env: Env, pool: Address, new_sqrt_price_x64: u128) {
         read_admin(&env).require_auth();
-        let args: Vec<soroban_sdk::Val> = soroban_sdk::vec![
-            &env,
-            new_sqrt_price_x64.into_val(&env),
-        ];
+        let args: Vec<soroban_sdk::Val> =
+            soroban_sdk::vec![&env, new_sqrt_price_x64.into_val(&env),];
         env.invoke_contract::<()>(&pool, &Symbol::new(&env, "set_price"), args);
     }
 
     pub fn get_pool(env: Env, token_a: Address, token_b: Address, fee: u32) -> Option<Address> {
         let (token_0, token_1) = sort_tokens(token_a, token_b);
-        get_pool(&env, &PoolKey { token_0, token_1, fee })
+        get_pool(
+            &env,
+            &PoolKey {
+                token_0,
+                token_1,
+                fee,
+            },
+        )
     }
 
     pub fn set_fee_recipient(env: Env, recipient: Address) {
@@ -117,8 +129,16 @@ impl FactoryContract {
         write_protocol_fee(&env, fee);
     }
 
-    pub fn get_fee_recipient(env: Env) -> Address { read_fee_recipient(&env) }
-    pub fn get_protocol_fee(env: Env) -> u32 { read_protocol_fee(&env) }
-    pub fn get_admin(env: Env) -> Address { read_admin(&env) }
-    pub fn get_pool_wasm_hash(env: Env) -> BytesN<32> { read_pool_wasm_hash(&env) }
+    pub fn get_fee_recipient(env: Env) -> Address {
+        read_fee_recipient(&env)
+    }
+    pub fn get_protocol_fee(env: Env) -> u32 {
+        read_protocol_fee(&env)
+    }
+    pub fn get_admin(env: Env) -> Address {
+        read_admin(&env)
+    }
+    pub fn get_pool_wasm_hash(env: Env) -> BytesN<32> {
+        read_pool_wasm_hash(&env)
+    }
 }
