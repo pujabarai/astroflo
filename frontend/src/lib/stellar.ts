@@ -17,7 +17,9 @@ let _rpc: RpcServer | null = null;
 
 export function getRpc(): RpcServer {
   if (!_rpc) {
-    _rpc = new SorobanRpc.Server(SOROBAN_RPC_URL, { allowHttp: false });
+    _rpc = new SorobanRpc.Server(SOROBAN_RPC_URL, {
+      allowHttp: !SOROBAN_RPC_URL.startsWith("https://"),
+    });
   }
   return _rpc;
 }

@@ -19,15 +19,24 @@ export const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS!;
 export const FEE_TIER = 3000;
 export const TICK_SPACING = 10;
 
-export const NETWORK_PASSPHRASE =
-  process.env.NEXT_PUBLIC_NETWORK_PASSPHRASE ??
-  "Test SDF Network ; September 2015";
-export const SOROBAN_RPC_URL =
-  process.env.NEXT_PUBLIC_SOROBAN_RPC_URL ??
-  "https://soroban-testnet.stellar.org";
-export const HORIZON_URL =
-  process.env.NEXT_PUBLIC_HORIZON_URL ??
-  "https://horizon-testnet.stellar.org";
+// `??` only guards null/undefined; an unset CI secret arrives as "", so treat
+// empty/whitespace as "use the default" too. Keep the static process.env.*
+// references so Next.js inlines them at build time.
+const envOr = (value: string | undefined, fallback: string) =>
+  value && value.trim() !== "" ? value : fallback;
+
+export const NETWORK_PASSPHRASE = envOr(
+  process.env.NEXT_PUBLIC_NETWORK_PASSPHRASE,
+  "Test SDF Network ; September 2015"
+);
+export const SOROBAN_RPC_URL = envOr(
+  process.env.NEXT_PUBLIC_SOROBAN_RPC_URL,
+  "https://soroban-testnet.stellar.org"
+);
+export const HORIZON_URL = envOr(
+  process.env.NEXT_PUBLIC_HORIZON_URL,
+  "https://horizon-testnet.stellar.org"
+);
 
 export const XLM_DECIMALS = 7;
 export const USDC_DECIMALS = 7;
