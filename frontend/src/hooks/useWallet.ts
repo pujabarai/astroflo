@@ -8,22 +8,24 @@ export function useWallet() {
   const [connecting, setConnecting] = useState(false);
 
   useEffect(() => {
-    checkConnection();
-  }, []);
-
-  async function checkConnection() {
-    try {
-      const { isConnected } = await import("@stellar/freighter-api");
-      const connected = await isConnected();
-      if (connected) {
-        const { getAddress } = await import("@stellar/freighter-api");
+    let cancelled = false;
+    (async () => {
+      try {
+        const { isConnected, getAddress } = await import(
+          "@stellar/freighter-api"
+        );
+        const connected = await isConnected();
+        if (!connected) return;
         const result = await getAddress();
-        if (result.address) setAddress(result.address);
+        if (!cancelled && result.address) setAddress(result.address);
+      } catch {
+        // Freighter not installed
       }
-    } catch {
-      // Freighter not installed
-    }
-  }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const connect = useCallback(async () => {
     setConnecting(true);
