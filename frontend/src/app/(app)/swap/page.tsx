@@ -9,7 +9,7 @@ import { useWallet } from "@/hooks/useWallet";
 import { usePool } from "@/hooks/usePool";
 import { useSwapQuote } from "@/hooks/useSwapQuote";
 import { usePrices } from "@/hooks/usePrices";
-import { toStroops, fromStroops, computePriceImpact, toUsd, formatUsd } from "@/lib/math";
+import { toStroops, fromStroops, computePriceImpact, toUsd, formatUsd, sqrtPriceX64ToPrice } from "@/lib/math";
 import { buildSwapTx, buildApprovalTx } from "@/lib/transactions";
 import { submitTransaction, getLatestLedger } from "@/lib/stellar";
 import { XLM_ADDRESS, USDC_ADDRESS, FEE_TIER, POOL_ADDRESS } from "@/lib/constants";
@@ -49,10 +49,15 @@ export default function SwapPage() {
     ? (quote.amountOut * (10000n - slippageBps)) / 10000n
     : 0n;
 
-  // pool.currentPrice = sqrtPriceX64ToPrice = XLM/USDC (XLM per USDC).
-  // Displayed rate must be in output-token / input-token units.
-  const usdcPerXlm = pool ? 1 / pool.currentPrice : 0;
-  const xlmPerUsdc = pool ? pool.currentPrice : 0;
+  // Rate and price-impact baseline must come from the same on-chain price the
+  // quote (computeSwapQuote) trades against — not pool.currentPrice, which is
+  // the live CoinGecko/Binance price and can drift from the pool's actual
+  // price on a testnet pool with no arbitrage keeping it in line. Using two
+  // different prices here made one swap direction look like a gain and the
+  // other a loss for the same trade.
+  const poolXlmPerUsdc = pool ? sqrtPriceX64ToPrice(pool.sqrtPriceX64) : 0;
+  const usdcPerXlm = poolXlmPerUsdc > 0 ? 1 / poolXlmPerUsdc : 0;
+  const xlmPerUsdc = poolXlmPerUsdc;
   const rate = pool
     ? zeroForOne
       ? `1 XLM ≈ ${usdcPerXlm.toFixed(4)} USDC`    // XLM→USDC: output is USDC
