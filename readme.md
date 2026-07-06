@@ -71,7 +71,7 @@
 26. [User Feedback Implementation](#26-user-feedback-implementation)
 
 ---
-## 🔗 Quick Links
+## Quick Links
 
 | Resource | Link | 
 |----|-----|
