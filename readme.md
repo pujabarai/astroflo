@@ -1,8 +1,26 @@
 # StellarSwap — CLMM DEX on Stellar Testnet
 
-> **A production-grade Concentrated Liquidity Market Maker (CLMM) DEX built on Stellar's Soroban smart contract platform. Initial trading pair: XLM / USDC on Stellar Testnet.**
+<img width="2854" height="1556" alt="Screenshot from 2026-06-29 16-07-29" src="https://github.com/user-attachments/assets/298b11ea-4bbf-4a4e-a61f-489b68d34864" />
+<div align="center">
+<img src="https://img.shields.io/badge/Stellar-Soroban-7B2FBE?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Rust-1.70%2B-red?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge" />
+<img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge" />
+<img src="https://img.shields.io/badge/Status-Live%20on%20Testnet-brightgreen?style=for-the-badge" />
 
----
+ **A production-grade Concentrated Liquidity Market Maker (CLMM) DEX built on Stellar's Soroban smart contract platform. Initial trading pair: XLM / USDC on Stellar Testnet.**
+
+</div>
+
+## Mobile Responsive UI
+
+<div align="center">
+  <img
+    width="360"
+    alt="Mobile Responsive UI"
+    src="https://github.com/user-attachments/assets/36d5df8b-4984-4f31-8bed-e0e93d33fff4"
+  />
+</div>
 
 ## Table of Contents
 
@@ -1638,6 +1656,9 @@ npm run test         # vitest run
 ---
 
 ## 21. CI/CD Pipeline
+
+<img width="2854" height="1104" alt="Screenshot from 2026-06-29 15-55-20" src="https://github.com/user-attachments/assets/f1b08e25-252e-4f0a-a1e3-7216a256c03b" />
+
 
 Two GitHub Actions workflows in `.github/workflows/`:
 
