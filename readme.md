@@ -1,6 +1,7 @@
 # StellarSwap — CLMM DEX on Stellar Testnet
 
-<img width="2854" height="1556" alt="Screenshot from 2026-06-29 16-07-29" src="https://github.com/user-attachments/assets/298b11ea-4bbf-4a4e-a61f-489b68d34864" />
+<img width="2880" height="1565" alt="Screenshot from 2026-07-06 17-09-49" src="https://github.com/user-attachments/assets/bba36b9f-3ec3-4fe8-ac8e-60cfebeb0554" />
+
 <div align="center">
 <img src="https://img.shields.io/badge/Stellar-Soroban-7B2FBE?style=for-the-badge" />
 <img src="https://img.shields.io/badge/Rust-1.70%2B-red?style=for-the-badge" />
@@ -15,11 +16,7 @@
 ## Mobile Responsive UI
 
 <div align="center">
-  <img
-    width="360"
-    alt="Mobile Responsive UI"
-    src="https://github.com/user-attachments/assets/36d5df8b-4984-4f31-8bed-e0e93d33fff4"
-  />
+  <img width="300" alt="Screenshot from 2026-07-06 17-11-36" src="https://github.com/user-attachments/assets/447b6651-4822-475d-9f5b-3cbcbc91de0e" />
 </div>
 
 ## Table of Contents
