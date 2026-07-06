@@ -3,6 +3,8 @@ import {
   TransactionBuilder,
   Contract,
   Account,
+  Asset,
+  Operation,
   xdr,
   nativeToScVal,
   scValToNative,
@@ -58,6 +60,46 @@ export async function buildContractTx(
   }
 
   return SorobanRpc.assembleTransaction(tx, sim).build();
+}
+
+/**
+ * Classic Stellar assets wrapped by a Stellar Asset Contract (e.g. this
+ * deployment's USDC) can only be transferred to accounts that already hold a
+ * trustline for them — `transfer`/`transfer_from` on the SAC fails with
+ * "trustline entry is missing for account" otherwise. Check this before
+ * attempting a transfer so the UI can offer to establish the trustline
+ * instead of surfacing a raw contract error.
+ */
+export async function hasTrustline(
+  address: string,
+  assetCode: string,
+  issuer: string
+): Promise<boolean> {
+  const res = await fetch(`${HORIZON_URL}/accounts/${address}`);
+  if (!res.ok) return false;
+  const account = await res.json();
+  type HorizonBalance = { asset_code?: string; asset_issuer?: string };
+  return (account.balances ?? []).some(
+    (b: HorizonBalance) => b.asset_code === assetCode && b.asset_issuer === issuer
+  );
+}
+
+/** Builds a `changeTrust` transaction so the wallet can hold the given classic asset. */
+export async function buildTrustlineTx(
+  walletAddress: string,
+  assetCode: string,
+  issuer: string
+): Promise<string> {
+  const server = getRpc();
+  const account = await server.getAccount(walletAddress);
+  const tx = new TransactionBuilder(account, {
+    fee: BASE_FEE,
+    networkPassphrase: NETWORK_PASSPHRASE,
+  })
+    .addOperation(Operation.changeTrust({ asset: new Asset(assetCode, issuer) }))
+    .setTimeout(300)
+    .build();
+  return tx.toXDR();
 }
 
 // Valid 56-char public key used as a throwaway source for read-only simulations.

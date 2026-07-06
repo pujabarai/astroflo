@@ -15,6 +15,11 @@ export const ROUTER_ADDRESS = process.env.NEXT_PUBLIC_ROUTER_ADDRESS!;
 export const PM_ADDRESS = process.env.NEXT_PUBLIC_POSITION_MANAGER_ADDRESS!;
 export const XLM_ADDRESS = process.env.NEXT_PUBLIC_XLM_ADDRESS!;
 export const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS!;
+// USDC here is a Stellar Asset Contract wrapping a classic asset — the
+// recipient's classic Stellar account must hold a trustline for it before
+// it can receive a transfer, hence the issuer/asset code below.
+export const USDC_ISSUER = process.env.NEXT_PUBLIC_USDC_ISSUER!;
+export const USDC_ASSET_CODE = process.env.NEXT_PUBLIC_USDC_ASSET_CODE || "USDC";
 
 export const FEE_TIER = 3000;
 export const TICK_SPACING = 10;

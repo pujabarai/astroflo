@@ -24,13 +24,15 @@ import {
   formatUsd,
 } from "@/lib/math";
 import { buildMintTx, buildApprovalTx } from "@/lib/transactions";
-import { submitTransaction, getLatestLedger } from "@/lib/stellar";
+import { submitTransaction, getLatestLedger, hasTrustline, buildTrustlineTx } from "@/lib/stellar";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   TICK_SPACING,
   POOL_ADDRESS,
   XLM_ADDRESS,
   USDC_ADDRESS,
+  USDC_ISSUER,
+  USDC_ASSET_CODE,
   STROOP,
 } from "@/lib/constants";
 
@@ -224,6 +226,17 @@ export default function AddLiquidityPage() {
       const deadline = BigInt(Math.floor(Date.now() / 1000) + 300);
       const currentLedger = await getLatestLedger();
       const approvalExpiry = currentLedger + 500;
+
+      // USDC here is a Stellar Asset Contract wrapping a classic asset — the
+      // wallet's account must hold a trustline for it before it can receive
+      // any transfer (SAC transfer_from fails otherwise). Establish it first
+      // if missing, before approving/minting.
+      if (a0Usdc > 0n && !(await hasTrustline(address, USDC_ASSET_CODE, USDC_ISSUER))) {
+        addToast("Establishing USDC trustline...", "info");
+        const trustXdr = await buildTrustlineTx(address, USDC_ASSET_CODE, USDC_ISSUER);
+        await submitTransaction(await sign(trustXdr));
+        addToast("USDC trustline established", "success");
+      }
 
       if (a1Xlm > 0n) {
         addToast("Approving XLM...", "info");
