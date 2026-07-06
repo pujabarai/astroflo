@@ -71,6 +71,14 @@
 26. [User Feedback Implementation](#26-user-feedback-implementation)
 
 ---
+## 🔗 Quick Links
+
+| Resource | Link | 
+|----|-----|
+| Live Demo | [Live Link](https://astroflo.vercel.app/) | 
+| Demo Video | [Video link](https://youtu.be/foDUtKHLPnk?si=MXrqrKTPU4tDcy7i) |
+
+---
 
 ## 1. Project Overview
 
