@@ -90,51 +90,35 @@ export function Navigation() {
 
       </nav>
       
-      {/* Mobile Menu - Full Screen Overlay */}
+      {/* Mobile Menu — compact dropdown below the nav, not a full-page overlay */}
       <div
-        className={`md:hidden fixed inset-0 bg-background z-40 transition-all duration-500 ${
-          isMobileMenuOpen 
-            ? "opacity-100 pointer-events-auto" 
-            : "opacity-0 pointer-events-none"
+        className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+          isMobileMenuOpen ? "max-h-96" : "max-h-0"
         }`}
-        style={{ top: 0 }}
       >
-        <div className="flex flex-col h-full px-8 pt-28 pb-8">
-          {/* Navigation Links */}
-          <div className="flex-1 flex flex-col justify-center gap-8">
-            {navLinks.map((link, i) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`text-5xl font-display text-foreground hover:text-muted-foreground transition-all duration-500 ${
-                  isMobileMenuOpen
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
-                style={{ transitionDelay: isMobileMenuOpen ? `${i * 75}ms` : "0ms" }}
-              >
-                {link.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Bottom CTAs */}
-          <div className={`flex gap-4 pt-8 border-t border-foreground/10 transition-all duration-500 ${
-            isMobileMenuOpen
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
+        <div
+          className={`flex flex-col gap-1 px-6 py-4 mt-2 rounded-2xl border border-foreground/10 bg-background/95 backdrop-blur-xl transition-all duration-300 ${
+            isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
           }`}
-          style={{ transitionDelay: isMobileMenuOpen ? "300ms" : "0ms" }}
-          >
-            <Button
-              asChild
-              className="flex-1 bg-foreground text-background rounded-full h-14 text-base"
+        >
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
               onClick={() => setIsMobileMenuOpen(false)}
+              className="text-base py-2.5 text-foreground/80 hover:text-foreground transition-colors duration-300"
             >
-              <Link href="/swap">Launch App</Link>
-            </Button>
-          </div>
+              {link.name}
+            </Link>
+          ))}
+
+          <Button
+            asChild
+            className="mt-3 bg-foreground text-background rounded-full h-11 text-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <Link href="/swap">Launch App</Link>
+          </Button>
         </div>
       </div>
     </header>
