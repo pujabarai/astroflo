@@ -12,7 +12,6 @@ function AnimatedCounter({ end, suffix = "", prefix = "" }: { end: number; suffi
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          let start = 0;
           const duration = 2000;
           const startTime = performance.now();
 
@@ -77,9 +76,12 @@ export function MetricsSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setTime(new Date());
+    const raf = requestAnimationFrame(() => setTime(new Date()));
     const interval = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(interval);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {

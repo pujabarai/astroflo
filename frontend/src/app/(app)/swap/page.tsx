@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Repeat, SlidersHorizontal } from "lucide-react";
 import TokenInputBox from "@/components/swap/TokenInputBox";
 import PriceInfo from "@/components/swap/PriceInfo";
