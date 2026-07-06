@@ -95,6 +95,8 @@ jobs:
           NEXT_PUBLIC_POSITION_MANAGER_ADDRESS: ${{ secrets.NEXT_PUBLIC_POSITION_MANAGER_ADDRESS }}
           NEXT_PUBLIC_XLM_ADDRESS: ${{ secrets.NEXT_PUBLIC_XLM_ADDRESS }}
           NEXT_PUBLIC_USDC_ADDRESS: ${{ secrets.NEXT_PUBLIC_USDC_ADDRESS }}
+          NEXT_PUBLIC_USDC_ISSUER: ${{ secrets.NEXT_PUBLIC_USDC_ISSUER }}
+          NEXT_PUBLIC_USDC_ASSET_CODE: ${{ secrets.NEXT_PUBLIC_USDC_ASSET_CODE }}
         run: npm run build
 
       - name: Deploy to Vercel (production)
