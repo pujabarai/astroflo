@@ -1,8 +1,22 @@
 import type { Metadata } from "next";
+import { Instrument_Sans, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import Providers from "@/components/Providers";
-import Navbar from "@/components/Navbar";
-import { ToastProvider } from "@/components/Toast";
+
+const instrumentSans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-instrument",
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-instrument-serif",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+});
 
 export const metadata: Metadata = {
   title: "AstroFlo — CLMM DEX on Stellar",
@@ -17,13 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-        <Providers>
-          <ToastProvider>
-            <Navbar />
-            <main style={{ flex: 1 }}>{children}</main>
-          </ToastProvider>
-        </Providers>
+      <body
+        className={`${instrumentSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} font-sans antialiased`}
+      >
+        {children}
       </body>
     </html>
   );
