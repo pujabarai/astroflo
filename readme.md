@@ -53,6 +53,7 @@
 23. [Environment Variables](#23-environment-variables)
 24. [Troubleshooting](#24-troubleshooting)
 25. [Deployment Evidence](#25-deployment-evidence)
+26. [User Feedback Implementation](#26-user-feedback-implementation)
 
 ---
 
@@ -1750,5 +1751,39 @@ Explore the pool's deploy + interaction transaction hashes on
 **Test evidence:** 7 passing contract tests + 11 passing frontend tests (§20).
 **Build evidence:** `npm run build` prerenders all 6 routes; `cargo build
 --target wasm32-unknown-unknown --release` produces 4 contract wasms.
+
+---
+
+## 26. User Feedback Implementation
+
+The product went through a round of hands-on user feedback covering the marketing
+site and the Swap / Liquidity / Portfolio app shell. Each row below maps the
+feedback we received to the concrete change shipped for it and the commit that
+contains that change.
+
+| # | User Feedback | Implementation | Commit |
+|---|---|---|---|
+| 1 | Rewrite the landing page copy for AstroFlo and simplify the navbar to Swap / Liquidity / Portfolio; remove "Sign in"; turn "Start creating" into a "Launch App" button that opens `/swap`. | Rewrote every landing section (hero, features, how-it-works, developers, pricing/fee-tiers, security, integrations, testimonials, metrics, infrastructure, CTA, footer) with AstroFlo-specific (CLMM DEX on Stellar) copy; reworked the navbar links and CTA. | [`e06a8e8`](https://github.com/pujabarai/astroflo/commit/e06a8e8) |
+| 2 | Make the Swap, Liquidity, and Portfolio pages use the same visual theme as the landing page. | Replaced the old dark indigo "glass" DEX theme with the landing page's light monochrome design system (shared color tokens, buttons, cards, fonts) across all three app pages. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 3 | Use the provided design exactly for the Swap page, with real XLM and USDC logos and the landing page's font. | Rebuilt the Swap card to match the mockup: stacked Sell/Buy panels, real Stellar (XLM) and Circle (USDC) token logos in place of emoji, seam-positioned flip button, floating settings button. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 4 | Match the Swap/Liquidity/Portfolio navbar font to the landing page; remove the AI-generated water-drop icon on Liquidity's empty state and the lock icon on Portfolio's empty state. | Aligned navbar typography with the landing page and deleted both emoji icons from the respective empty states. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 5 | Keep the Swap card's original font; give the navbar the same scroll animation/font style as the landing page; remove the `XLM/USDC $x.xx` price readout from the navbar. | Reverted the Swap card back to the app's sans font, matched the navbar's scroll behavior to the landing page, and dropped the on-chain price pill from the navbar. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 6 | The Slippage Tolerance popover overlaps the Swap card — move it beside the card instead. | Repositioned the popover to open to the right of the settings button, clear of the card, with a mobile fallback that opens below it. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 7 | The settings button should sit further right, matching a reference screenshot. | Adjusted the floating settings button's offset to match the reference. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 8 | Replace the remaining AI-generated star/dollar emoji icons on the Add Liquidity (`/liquidity/new`) page with the real XLM/USDC logos. | Swapped every emoji token icon on that page (pair header, deposit boxes, ratio bar) for the real logos. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 9 | An earlier fix accidentally changed the landing page's font site-wide — restore the exact font from `design.zip`. | Found the root cause (a Tailwind `@theme inline` token that only resolves inside utility classes, not in hand-written CSS) and reverted the shared `.font-display` rule to match `design.zip` exactly, without touching the already-correct app-page fonts. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 10 | Use the same font on `/liquidity`, `/portfolio`, and `/liquidity/new` as the landing page. | Fixed the shared `.gradient-text` heading class from the app pages back to the landing page's Instrument Sans. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 11 | Make the Swap, Liquidity, and Portfolio pages mobile responsive. | Fixed horizontal-overflow bugs (floating settings button offset, `grid-template-columns: 1fr` missing `minmax(0, ...)`), and stacked the pool-stats grid on narrow screens. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 12 | Tapping the navbar hamburger covers the entire page — it should stay compact. | Replaced the full-screen mobile overlay (borrowed from the landing page) with a compact dropdown that opens just below the navbar. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 13 | Use the provided AstroFlo mark as the app navbar logo (background removed), and remove the "AstroFlo TM" text — without touching the landing page's navbar. | Processed the provided logo (transparent background, cropped) and swapped it in for the app navbar only; the landing page navbar was left untouched. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 14 | The Connect/Disconnect wallet button should share one consistent design, and the raw wallet address chip (e.g. `GBEU...23TO`) should be removed. | Unified both states onto the same pill button style and removed the address chip. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 15 | Label the connected-state button "Disconnect Wallet". | Updated the button copy. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+| 16 | Nudge the navbar logo slightly right, and make it link to the landing page. | Adjusted the logo's spacing and pointed its link at `/` instead of `/swap`. | [`cd3f51c`](https://github.com/pujabarai/astroflo/commit/cd3f51c) |
+
+> Rows 2–16 land in the same commit (`cd3f51c`) because they were iterative
+> refinements to the same app-shell files (navbar, swap card, theme tokens)
+> made in direct response to feedback within a single continuous session,
+> rather than independent features — each item was still verified individually
+> (typecheck + live browser screenshot) before moving to the next.
 
 ---
