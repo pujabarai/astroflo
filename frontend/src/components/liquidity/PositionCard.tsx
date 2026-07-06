@@ -114,9 +114,9 @@ export default function PositionCard({ position, onRefresh }: Props) {
               gap: "4px",
             }}
           >
-            <span style={{ fontSize: "18px" }}>⭐</span>
+            <img src="/tokens/xlm.png" alt="XLM" style={{ width: 20, height: 20, borderRadius: "50%", objectFit: "cover" }} />
             <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "14px" }}>/</span>
-            <span style={{ fontSize: "18px" }}>💵</span>
+            <img src="/tokens/usdc.png" alt="USDC" style={{ width: 20, height: 20, borderRadius: "50%", objectFit: "cover" }} />
           </div>
           <div>
             <p style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "15px" }}>
@@ -178,8 +178,8 @@ export default function PositionCard({ position, onRefresh }: Props) {
 
       {/* Token amounts */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-        <TokenAmount symbol="USDC" logo="💵" amount={usdcValue} />
-        <TokenAmount symbol="XLM"  logo="⭐" amount={xlmValue} />
+        <TokenAmount symbol="USDC" logo="/tokens/usdc.png" amount={usdcValue} />
+        <TokenAmount symbol="XLM"  logo="/tokens/xlm.png" amount={xlmValue} />
       </div>
 
       {/* USD value */}
@@ -294,7 +294,7 @@ function TokenAmount({
           marginBottom: "4px",
         }}
       >
-        <span>{logo}</span>
+        <img src={logo} alt={symbol} style={{ width: 16, height: 16, borderRadius: "50%", objectFit: "cover" }} />
         <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "12px" }}>{symbol}</span>
       </div>
       <p style={{ color: "oklch(0.12 0.01 60)", fontWeight: 600, fontSize: "15px" }}>

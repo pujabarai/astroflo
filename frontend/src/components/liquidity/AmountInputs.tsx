@@ -93,7 +93,7 @@ export default function AmountInputs({
               whiteSpace: "nowrap",
             }}
           >
-            <span style={{ fontSize: "18px" }}>⭐</span>
+            <img src="/tokens/xlm.png" alt="XLM" style={{ width: 18, height: 18, borderRadius: "50%", objectFit: "cover" }} />
             <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "14px" }}>
               XLM
             </span>
@@ -157,7 +157,7 @@ export default function AmountInputs({
               whiteSpace: "nowrap",
             }}
           >
-            <span style={{ fontSize: "18px" }}>💵</span>
+            <img src="/tokens/usdc.png" alt="USDC" style={{ width: 18, height: 18, borderRadius: "50%", objectFit: "cover" }} />
             <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "14px" }}>
               USDC
             </span>
