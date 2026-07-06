@@ -160,12 +160,12 @@ export default function LiquidityChart({
       >
         <defs>
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="oklch(0.12 0.01 60)" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="oklch(0.12 0.01 60)" stopOpacity="0.05" />
           </linearGradient>
           <linearGradient id="barGradActive" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" stopOpacity="1" />
-            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.35" />
+            <stop offset="0%" stopColor="oklch(0.12 0.01 60)" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="oklch(0.12 0.01 60)" stopOpacity="0.3" />
           </linearGradient>
         </defs>
 
@@ -176,7 +176,7 @@ export default function LiquidityChart({
             y={PAD_TOP}
             width={Math.max(0, priceToX(high24h) - priceToX(low24h))}
             height={plotH}
-            fill="rgba(139,92,246,0.10)"
+            fill="oklch(0.12 0.01 60 / 0.05)"
           />
         )}
 
@@ -186,7 +186,7 @@ export default function LiquidityChart({
           y={PAD_TOP}
           width={Math.abs(xUpper - xLower)}
           height={plotH}
-          fill="rgba(34,211,238,0.08)"
+          fill="oklch(0.12 0.01 60 / 0.06)"
         />
 
         {/* Histogram */}
@@ -211,14 +211,14 @@ export default function LiquidityChart({
           y1={PAD_TOP}
           x2={xCurrent}
           y2={PAD_TOP + plotH}
-          stroke="#e8eaf6"
+          stroke="oklch(0.12 0.01 60)"
           strokeWidth={1.5}
           strokeDasharray="4 3"
         />
 
         {/* Range handles */}
-        <Handle x={xLower} h={plotH} color="#22d3ee" onDown={() => (dragging.current = "lower")} disabled={disabled} />
-        <Handle x={xUpper} h={plotH} color="#22d3ee" onDown={() => (dragging.current = "upper")} disabled={disabled} />
+        <Handle x={xLower} h={plotH} color="oklch(0.12 0.01 60)" onDown={() => (dragging.current = "lower")} disabled={disabled} />
+        <Handle x={xUpper} h={plotH} color="oklch(0.12 0.01 60)" onDown={() => (dragging.current = "upper")} disabled={disabled} />
 
         {/* X axis labels */}
         {axisTicks.map((t, i) => (
@@ -227,7 +227,7 @@ export default function LiquidityChart({
             x={priceToX(t)}
             y={H - 8}
             fontSize={11}
-            fill="#6b7280"
+            fill="oklch(0.45 0.02 60)"
             textAnchor="middle"
           >
             {fmt(t)}
@@ -243,19 +243,19 @@ export default function LiquidityChart({
           flexWrap: "wrap",
           marginTop: 8,
           fontSize: 12,
-          color: "#9ca3af",
+          color: "oklch(0.45 0.02 60)",
         }}
       >
         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 14, height: 0, borderTop: "1.5px dashed #e8eaf6" }} />
+          <span style={{ width: 14, height: 0, borderTop: "1.5px dashed oklch(0.12 0.01 60)" }} />
           Current Price&nbsp;
-          <strong style={{ color: "#e8eaf6" }}>{fmt(currentPrice)}</strong>&nbsp;USDC per XLM
+          <strong style={{ color: "oklch(0.12 0.01 60)" }}>{fmt(currentPrice)}</strong>&nbsp;USDC per XLM
         </span>
         {low24h && high24h && (
           <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <span style={{ width: 12, height: 12, background: "rgba(139,92,246,0.4)", borderRadius: 2 }} />
+            <span style={{ width: 12, height: 12, background: "oklch(0.12 0.01 60 / 0.15)", borderRadius: 2 }} />
             24h Range&nbsp;
-            <strong style={{ color: "#c4b5fd" }}>
+            <strong style={{ color: "oklch(0.12 0.01 60)" }}>
               {fmt(low24h)} – {fmt(high24h)}
             </strong>
           </span>
@@ -305,9 +305,9 @@ function ZoomBtn({ label, onClick, title }: { label: string; onClick: () => void
         width: 28,
         height: 28,
         borderRadius: 8,
-        border: "1px solid rgba(99,102,241,0.25)",
-        background: "rgba(13,14,20,0.7)",
-        color: "#a5b4fc",
+        border: "1px solid oklch(0.12 0.01 60 / 0.15)",
+        background: "oklch(0.94 0.005 90)",
+        color: "oklch(0.12 0.01 60)",
         cursor: "pointer",
         fontSize: 14,
         display: "flex",

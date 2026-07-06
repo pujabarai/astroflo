@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 import WalletButton from "./WalletButton";
-import { usePool } from "@/hooks/usePool";
 
 const LINKS = [
   { href: "/swap", label: "Swap" },
@@ -14,133 +14,87 @@ const LINKS = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { data: pool } = usePool();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
   return (
-    <nav
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        borderBottom: "1px solid rgba(99,102,241,0.12)",
-        backdropFilter: "blur(20px)",
-        background: "rgba(13,14,20,0.85)",
-      }}
-    >
-      <div
-        className="nav-inner"
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          height: "64px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        {/* Logo */}
-        <Link
-          href="/swap"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            textDecoration: "none",
-          }}
-        >
-          <div
-            style={{
-              width: "32px",
-              height: "32px",
-              background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
-              borderRadius: "8px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "16px",
-              fontWeight: "bold",
-              color: "white",
-            }}
-          >
-            ✦
+    <header className="sticky top-0 z-50">
+      <nav className="mx-auto bg-background/85 backdrop-blur-xl border-b border-foreground/10 max-w-none">
+        <div className="flex items-center justify-between px-6 lg:px-8 h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center ml-3">
+            <img src="/brand/astroflo-logo.png" alt="AstroFlo" className="h-8 w-auto" />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-10">
+            {LINKS.map(({ href, label }) => {
+              const active = isActive(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-sm transition-colors duration-300 relative group ${
+                    active ? "text-foreground font-medium" : "text-foreground/70 hover:text-foreground"
+                  }`}
+                >
+                  {label}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-px bg-foreground transition-all duration-300 ${
+                      active ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
           </div>
-          <span
-            className="gradient-text"
-            style={{ fontWeight: 700, fontSize: "18px" }}
-          >
-            AstroFlo
-          </span>
-        </Link>
 
-        {/* Nav links (desktop) */}
-        <div className="nav-links" style={{ display: "flex", gap: "4px" }}>
-          {LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`nav-link ${isActive(href) ? "active" : ""}`}
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Right: price + wallet + hamburger */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          {pool && (
-            <div
-              className="nav-price"
-              style={{
-                background: "rgba(99,102,241,0.08)",
-                border: "1px solid rgba(99,102,241,0.15)",
-                borderRadius: "8px",
-                padding: "4px 12px",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-              }}
-            >
-              <span style={{ color: "#9ca3af", fontSize: "12px" }}>
-                XLM/USDC
-              </span>
-              <span
-                style={{ color: "#a5b4fc", fontSize: "13px", fontWeight: 600 }}
-              >
-                ${pool.currentPrice.toFixed(4)}
-              </span>
+          {/* Right: wallet + hamburger */}
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <WalletButton />
             </div>
-          )}
-          <WalletButton />
-          <button
-            className="nav-hamburger"
-            aria-label="Toggle navigation menu"
-            aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            {menuOpen ? "✕" : "☰"}
-          </button>
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              className="md:hidden p-2"
+              aria-label="Toggle navigation menu"
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu — compact dropdown below the nav, not a full-page overlay */}
+      <div
+        className={`md:hidden overflow-hidden bg-background border-b border-foreground/10 transition-[max-height] duration-300 ease-in-out ${
+          menuOpen ? "max-h-96" : "max-h-0 border-b-0"
+        }`}
+      >
+        <div className="flex flex-col px-6 py-4 gap-1">
+          {LINKS.map(({ href, label }) => {
+            const active = isActive(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className={`text-base py-2.5 transition-colors duration-300 ${
+                  active ? "text-foreground font-medium" : "text-foreground/70"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
+          <div className="pt-3 mt-2 border-t border-foreground/10">
+            <WalletButton />
+          </div>
         </div>
       </div>
-
-      {/* Mobile dropdown menu */}
-      {menuOpen && (
-        <div className="nav-mobile-menu">
-          {LINKS.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              className={`nav-link ${isActive(href) ? "active" : ""}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </nav>
+    </header>
   );
 }

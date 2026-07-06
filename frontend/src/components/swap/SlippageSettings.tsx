@@ -6,51 +6,55 @@ import { SLIPPAGE_PRESETS } from "@/lib/constants";
 interface Props {
   slippage: number;
   onChange: (v: number) => void;
+  trigger?: React.ReactNode;
 }
 
-export default function SlippageSettings({ slippage, onChange }: Props) {
+export default function SlippageSettings({ slippage, onChange, trigger }: Props) {
   const [open, setOpen] = useState(false);
   const [custom, setCustom] = useState("");
 
   return (
     <div style={{ position: "relative" }}>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        style={{
-          background: "rgba(99,102,241,0.08)",
-          border: "1px solid rgba(99,102,241,0.2)",
-          borderRadius: "8px",
-          color: "#9ca3af",
-          padding: "6px 12px",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-          fontSize: "13px",
-        }}
-        title="Slippage settings"
-      >
-        <span>⚙</span>
-        <span style={{ color: "#a5b4fc" }}>{slippage}%</span>
-      </button>
+      <div onClick={() => setOpen((o) => !o)}>
+        {trigger ?? (
+          <button
+            style={{
+              background: "oklch(0.12 0.01 60 / 0.08)",
+              border: "1px solid oklch(0.12 0.01 60 / 0.2)",
+              borderRadius: "8px",
+              color: "oklch(0.45 0.02 60)",
+              padding: "6px 12px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "13px",
+            }}
+            title="Slippage settings"
+          >
+            <span>⚙</span>
+            <span style={{ color: "oklch(0.12 0.01 60)" }}>{slippage}%</span>
+          </button>
+        )}
+      </div>
 
       {open && (
         <div
+          className="slippage-panel"
           style={{
-            position: "absolute",
-            top: "calc(100% + 8px)",
-            right: 0,
-            background: "#1a1d2e",
-            border: "1px solid rgba(99,102,241,0.2)",
+            background: "oklch(1 0 0)",
+            border: "1px solid oklch(0.12 0.01 60 / 0.1)",
             borderRadius: "12px",
             padding: "16px",
             width: "240px",
+            maxWidth: "calc(100vw - 32px)",
+            boxShadow: "0 8px 24px oklch(0.12 0.01 60 / 0.12)",
             zIndex: 100,
           }}
         >
           <p
             style={{
-              color: "#9ca3af",
+              color: "oklch(0.45 0.02 60)",
               fontSize: "12px",
               marginBottom: "10px",
               fontWeight: 600,
@@ -75,13 +79,13 @@ export default function SlippageSettings({ slippage, onChange }: Props) {
                   border: "1px solid",
                   borderColor:
                     slippage === p
-                      ? "rgba(99,102,241,0.6)"
-                      : "rgba(99,102,241,0.15)",
+                      ? "oklch(0.12 0.01 60 / 0.6)"
+                      : "oklch(0.12 0.01 60 / 0.15)",
                   background:
                     slippage === p
-                      ? "rgba(99,102,241,0.2)"
+                      ? "oklch(0.12 0.01 60 / 0.2)"
                       : "transparent",
-                  color: slippage === p ? "#a5b4fc" : "#9ca3af",
+                  color: slippage === p ? "oklch(0.12 0.01 60)" : "oklch(0.45 0.02 60)",
                   cursor: "pointer",
                   fontSize: "13px",
                   fontWeight: 600,
@@ -95,8 +99,8 @@ export default function SlippageSettings({ slippage, onChange }: Props) {
             style={{
               display: "flex",
               alignItems: "center",
-              background: "#0f1117",
-              border: "1px solid rgba(99,102,241,0.15)",
+              background: "oklch(0.92 0.01 90)",
+              border: "1px solid oklch(0.12 0.01 60 / 0.15)",
               borderRadius: "8px",
               padding: "8px 12px",
               gap: "6px",
@@ -116,11 +120,11 @@ export default function SlippageSettings({ slippage, onChange }: Props) {
                 background: "transparent",
                 border: "none",
                 outline: "none",
-                color: "#e8eaf6",
+                color: "oklch(0.12 0.01 60)",
                 fontSize: "13px",
               }}
             />
-            <span style={{ color: "#9ca3af", fontSize: "13px" }}>%</span>
+            <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "13px" }}>%</span>
           </div>
           {slippage > 1 && (
             <p style={{ color: "#eab308", fontSize: "11px", marginTop: "8px" }}>

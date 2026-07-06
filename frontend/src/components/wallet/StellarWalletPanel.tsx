@@ -56,10 +56,10 @@ export default function StellarWalletPanel() {
     <div className="glass-card" style={{ padding: 24, marginBottom: 32 }}>
       {/* Header */}
       <div style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: "#e8eaf6" }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>
           Stellar Wallet — Freighter Integration
         </h2>
-        <p style={{ color: "#6b7280", fontSize: 13, marginTop: 4 }}>
+        <p style={{ color: "oklch(0.45 0.02 60)", fontSize: 13, marginTop: 4 }}>
           Detect · Connect · Balance · Send XLM on Stellar Testnet
         </p>
       </div>
@@ -72,7 +72,7 @@ export default function StellarWalletPanel() {
             href="https://freighter.app"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#a5b4fc", fontWeight: 600 }}
+            style={{ color: "oklch(0.12 0.01 60)", fontWeight: 600 }}
           >
             Install Freighter →
           </a>
@@ -97,8 +97,8 @@ export default function StellarWalletPanel() {
               <Label>Connected Address</Label>
               <p
                 style={{
-                  color: "#a5b4fc",
-                  fontFamily: "monospace",
+                  color: "oklch(0.12 0.01 60)",
+                  fontFamily: "var(--font-jetbrains)",
                   fontSize: 13,
                   wordBreak: "break-all",
                   marginTop: 4,
@@ -109,9 +109,9 @@ export default function StellarWalletPanel() {
             </div>
             <div style={{ flex: "1 1 160px" }}>
               <Label>XLM Balance</Label>
-              <p style={{ color: "#e8eaf6", fontSize: 24, fontWeight: 800, marginTop: 4 }}>
+              <p style={{ color: "oklch(0.12 0.01 60)", fontSize: 24, fontWeight: 800, marginTop: 4 }}>
                 {balance !== null ? `${balance}` : "—"}{" "}
-                <span style={{ fontSize: 14, color: "#6b7280", fontWeight: 600 }}>
+                <span style={{ fontSize: 14, color: "oklch(0.45 0.02 60)", fontWeight: 600 }}>
                   XLM
                 </span>
               </p>
@@ -177,7 +177,7 @@ export default function StellarWalletPanel() {
             href={`${EXPLORER_TX}/${txHash}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#a5b4fc", fontFamily: "monospace", wordBreak: "break-all" }}
+            style={{ color: "oklch(0.12 0.01 60)", fontFamily: "var(--font-jetbrains)", wordBreak: "break-all" }}
           >
             {txHash}
           </a>
@@ -193,7 +193,7 @@ export default function StellarWalletPanel() {
 
 function Label({ children }: { children: React.ReactNode }) {
   return (
-    <span style={{ color: "#6b7280", fontSize: 12, fontWeight: 600 }}>{children}</span>
+    <span style={{ color: "oklch(0.45 0.02 60)", fontSize: 12, fontWeight: 600 }}>{children}</span>
   );
 }
 
@@ -213,22 +213,22 @@ function banner(color: string): React.CSSProperties {
 const inputStyle: React.CSSProperties = {
   width: "100%",
   marginTop: 6,
-  background: "#0f1117",
-  border: "1px solid rgba(99,102,241,0.2)",
+  background: "oklch(0.92 0.01 90)",
+  border: "1px solid oklch(0.12 0.01 60 / 0.2)",
   borderRadius: 10,
   padding: "12px 14px",
-  color: "#e8eaf6",
+  color: "oklch(0.12 0.01 60)",
   fontSize: 14,
-  fontFamily: "monospace",
+  fontFamily: "var(--font-jetbrains)",
   outline: "none",
 };
 
 const secondaryBtn: React.CSSProperties = {
   padding: "10px 18px",
   borderRadius: 10,
-  border: "1px solid rgba(99,102,241,0.3)",
-  background: "rgba(99,102,241,0.1)",
-  color: "#a5b4fc",
+  border: "1px solid oklch(0.12 0.01 60 / 0.3)",
+  background: "oklch(0.12 0.01 60 / 0.1)",
+  color: "oklch(0.12 0.01 60)",
   cursor: "pointer",
   fontWeight: 600,
   fontSize: 13,

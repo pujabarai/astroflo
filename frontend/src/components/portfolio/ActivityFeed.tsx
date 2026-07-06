@@ -55,7 +55,7 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
             key={i}
             style={{
               height: "56px",
-              background: "rgba(26,29,46,0.4)",
+              background: "oklch(0.94 0.005 90)",
               borderRadius: "10px",
               animation: "pulse 1.5s infinite",
             }}
@@ -69,7 +69,7 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
     return (
       <div
         style={{
-          color: "#6b7280",
+          color: "oklch(0.45 0.02 60)",
           fontSize: "14px",
           textAlign: "center",
           padding: "24px",
@@ -84,7 +84,7 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
     return (
       <div
         style={{
-          color: "#6b7280",
+          color: "oklch(0.45 0.02 60)",
           fontSize: "14px",
           textAlign: "center",
           padding: "24px",
@@ -113,8 +113,8 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
             alignItems: "center",
             gap: "12px",
             padding: "12px 16px",
-            background: "rgba(26,29,46,0.4)",
-            border: "1px solid rgba(99,102,241,0.08)",
+            background: "oklch(0.94 0.005 90)",
+            border: "1px solid oklch(0.12 0.01 60 / 0.08)",
             borderRadius: "10px",
           }}
         >
@@ -124,7 +124,7 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
           <div style={{ flex: 1, minWidth: 0 }}>
             <p
               style={{
-                color: "#e8eaf6",
+                color: "oklch(0.12 0.01 60)",
                 fontSize: "13px",
                 fontWeight: 600,
                 whiteSpace: "nowrap",
@@ -134,15 +134,15 @@ export default function ActivityFeed({ walletAddress }: { walletAddress: string 
             >
               {formatType(effect.type)}
             </p>
-            <p style={{ color: "#6b7280", fontSize: "11px" }}>
+            <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>
               {timeAgo(effect.created_at)}
             </p>
           </div>
           {"amount" in effect && effect.amount ? (
             <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <p style={{ color: "#a5b4fc", fontSize: "13px", fontWeight: 600 }}>
+              <p style={{ color: "oklch(0.12 0.01 60)", fontSize: "13px", fontWeight: 600 }}>
                 {String(effect.amount)}{" "}
-                <span style={{ color: "#6b7280" }}>
+                <span style={{ color: "oklch(0.45 0.02 60)" }}>
                   {String(("asset_code" in effect && effect.asset_code) ? effect.asset_code : "XLM")}
                 </span>
               </p>

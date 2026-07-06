@@ -32,7 +32,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const colorMap = {
     success: { bg: "rgba(34,197,94,0.15)", border: "rgba(34,197,94,0.3)", color: "#22c55e" },
     error: { bg: "rgba(239,68,68,0.15)", border: "rgba(239,68,68,0.3)", color: "#f87171" },
-    info: { bg: "rgba(99,102,241,0.15)", border: "rgba(99,102,241,0.3)", color: "#a5b4fc" },
+    info: { bg: "oklch(0.12 0.01 60 / 0.15)", border: "oklch(0.12 0.01 60 / 0.3)", color: "oklch(0.12 0.01 60)" },
   };
 
   return (

@@ -47,8 +47,8 @@ export default function PriceInfo({
   return (
     <div
       style={{
-        background: "rgba(99,102,241,0.04)",
-        border: "1px solid rgba(99,102,241,0.1)",
+        background: "oklch(0.12 0.01 60 / 0.04)",
+        border: "1px solid oklch(0.12 0.01 60 / 0.1)",
         borderRadius: "12px",
         padding: "14px 16px",
         display: "flex",
@@ -58,9 +58,9 @@ export default function PriceInfo({
     >
       {/* Rate + staleness dot */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ color: "#6b7280", fontSize: "13px" }}>Rate</span>
+        <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "13px" }}>Rate</span>
         <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-          <span style={{ color: "#e8eaf6", fontSize: "13px", fontWeight: 600 }}>{rate}</span>
+          <span style={{ color: "oklch(0.12 0.01 60)", fontSize: "13px", fontWeight: 600 }}>{rate}</span>
           {lastFetchedAt !== undefined && (
             <span
               title={`Price updated ${secondsAgo}s ago`}
@@ -122,21 +122,21 @@ export default function PriceInfo({
             displayed amount. Proceed only if you understand the risk.
           </p>
           <label
-            style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "12px", color: "#9ca3af" }}
+            style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "12px", color: "oklch(0.45 0.02 60)" }}
           >
             <input
               type="checkbox"
               onChange={(e) => onHighImpactAcknowledged?.(e.target.checked)}
-              style={{ width: "14px", height: "14px", accentColor: "#6366f1", cursor: "pointer" }}
+              style={{ width: "14px", height: "14px", accentColor: "oklch(0.12 0.01 60)", cursor: "pointer" }}
             />
             I understand the price impact and want to continue
           </label>
         </div>
       )}
 
-      <Row label="Minimum Received" value={minimumReceived} valueColor="#e8eaf6" />
-      <Row label="Slippage Tolerance" value={`${slippage}%`} valueColor="#9ca3af" />
-      <Row label="Fee (0.3%)" value={fee} valueColor="#9ca3af" />
+      <Row label="Minimum Received" value={minimumReceived} valueColor="oklch(0.12 0.01 60)" />
+      <Row label="Slippage Tolerance" value={`${slippage}%`} valueColor="oklch(0.45 0.02 60)" />
+      <Row label="Fee (0.3%)" value={fee} valueColor="oklch(0.45 0.02 60)" />
     </div>
   );
 }
@@ -144,7 +144,7 @@ export default function PriceInfo({
 function Row({ label, value, valueColor }: { label: string; value: string; valueColor: string }) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <span style={{ color: "#6b7280", fontSize: "13px" }}>{label}</span>
+      <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "13px" }}>{label}</span>
       <span style={{ color: valueColor, fontSize: "13px", fontWeight: 600 }}>{value}</span>
     </div>
   );

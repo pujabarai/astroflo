@@ -1,9 +1,11 @@
 "use client";
 
+import { ChevronDown } from "lucide-react";
+
 interface Token {
   symbol: string;
   name: string;
-  logo: string;
+  logo: string; // image path
 }
 
 interface Props {
@@ -12,10 +14,8 @@ interface Props {
   onChange?: (v: string) => void;
   readOnly?: boolean;
   label: string;
-  balance?: string;
   usdValue?: string;
   loading?: boolean;
-  onMax?: () => void;
 }
 
 export default function TokenInputBox({
@@ -24,130 +24,100 @@ export default function TokenInputBox({
   onChange,
   readOnly = false,
   label,
-  balance,
   usdValue,
   loading,
-  onMax,
 }: Props) {
   return (
-    <div className="token-input">
-      <div
+    <div
+      style={{
+        background: "oklch(0.96 0.005 90)",
+        borderRadius: "28px",
+        padding: "24px 28px",
+      }}
+    >
+      <p
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10px",
+          fontFamily: "var(--font-instrument)",
+          fontSize: "22px",
+          color: "oklch(0.12 0.01 60)",
+          marginBottom: "18px",
         }}
       >
-        <span style={{ color: "#6b7280", fontSize: "12px", fontWeight: 600 }}>
-          {label}
-        </span>
-        {balance !== undefined && (
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ color: "#6b7280", fontSize: "12px" }}>
-              Balance: {balance} {token.symbol}
-            </span>
-            {onMax && (
-              <button
-                onClick={onMax}
-                style={{
-                  background: "rgba(99,102,241,0.15)",
-                  border: "1px solid rgba(99,102,241,0.3)",
-                  borderRadius: "4px",
-                  color: "#a5b4fc",
-                  fontSize: "11px",
-                  padding: "2px 6px",
-                  cursor: "pointer",
-                  fontWeight: 700,
-                }}
-              >
-                MAX
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+        {label}
+      </p>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "12px",
-        }}
-      >
-        {/* Token badge */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            background: "rgba(99,102,241,0.08)",
-            border: "1px solid rgba(99,102,241,0.15)",
-            borderRadius: "10px",
-            padding: "8px 14px",
-            whiteSpace: "nowrap",
-            flexShrink: 0,
-          }}
-        >
-          <span style={{ fontSize: "22px" }}>{token.logo}</span>
-          <div>
-            <p style={{ color: "#e8eaf6", fontWeight: 700, fontSize: "15px" }}>
-              {token.symbol}
-            </p>
-            <p style={{ color: "#6b7280", fontSize: "11px" }}>{token.name}</p>
-          </div>
-        </div>
-
-        {/* Amount input */}
-        <div style={{ flex: 1, textAlign: "right" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+        {/* Amount */}
+        <div style={{ minWidth: 0, flex: 1 }}>
           {loading ? (
-            <div
-              style={{
-                height: "36px",
-                background: "rgba(99,102,241,0.05)",
-                borderRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                paddingRight: "8px",
-              }}
-            >
-              <div className="spinner" style={{ width: "16px", height: "16px" }} />
+            <div style={{ display: "flex", alignItems: "center", height: "56px" }}>
+              <div className="spinner" style={{ width: "22px", height: "22px" }} />
             </div>
           ) : (
             <input
               type="text"
               inputMode="decimal"
-              placeholder="0.0"
+              placeholder="0"
               value={value}
               onChange={(e) => onChange?.(e.target.value)}
               readOnly={readOnly}
+              className="swap-amount-input"
               style={{
                 width: "100%",
                 background: "transparent",
                 border: "none",
                 outline: "none",
-                color: readOnly ? "#9ca3af" : "#e8eaf6",
-                fontSize: "24px",
-                fontWeight: 600,
-                textAlign: "right",
-                fontFamily: "monospace",
+                color: "oklch(0.12 0.01 60)",
+                fontFamily: "var(--font-instrument)",
+                fontSize: "56px",
+                lineHeight: 1,
               }}
             />
           )}
-          {usdValue && (
-            <p
-              style={{
-                color: "#6b7280",
-                fontSize: "12px",
-                marginTop: "4px",
-                textAlign: "right",
-              }}
-            >
-              ≈ ${usdValue}
-            </p>
-          )}
+          <p
+            style={{
+              color: "oklch(0.55 0.02 60)",
+              fontSize: "15px",
+              marginTop: "10px",
+            }}
+          >
+            ${usdValue ?? "0"}
+          </p>
+        </div>
+
+        {/* Token pill */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            background: "oklch(1 0 0)",
+            border: "1px solid oklch(0.12 0.01 60 / 0.06)",
+            boxShadow: "0 1px 3px oklch(0.12 0.01 60 / 0.08)",
+            borderRadius: "9999px",
+            padding: "10px 18px 10px 10px",
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
+          <img
+            src={token.logo}
+            alt={token.symbol}
+            width={32}
+            height={32}
+            style={{ borderRadius: "50%", objectFit: "cover" }}
+          />
+          <span
+            style={{
+              color: "oklch(0.12 0.01 60)",
+              fontWeight: 600,
+              fontSize: "17px",
+              fontFamily: "var(--font-instrument)",
+            }}
+          >
+            {token.symbol}
+          </span>
+          <ChevronDown size={16} style={{ color: "oklch(0.45 0.02 60)" }} />
         </div>
       </div>
     </div>

@@ -262,7 +262,7 @@ export default function AddLiquidityPage() {
     <div style={{ maxWidth: "1180px", margin: "0 auto", padding: "28px 24px 60px" }}>
       <button
         onClick={() => router.push("/liquidity")}
-        style={{ background: "transparent", border: "none", color: "#6b7280", cursor: "pointer", fontSize: 14, marginBottom: 16 }}
+        style={{ background: "transparent", border: "none", color: "oklch(0.45 0.02 60)", cursor: "pointer", fontSize: 14, marginBottom: 16 }}
       >
         ← Back to Positions
       </button>
@@ -271,22 +271,26 @@ export default function AddLiquidityPage() {
       <div className="glass-card" style={{ padding: "18px 24px", display: "flex", flexWrap: "wrap", gap: 16, alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <div style={{ display: "flex" }}>
-            <span style={tokenChip}>⭐</span>
-            <span style={{ ...tokenChip, marginLeft: -10 }}>💵</span>
+            <span style={tokenChip}>
+              <img src="/tokens/xlm.png" alt="XLM" style={{ width: 20, height: 20, borderRadius: "50%", objectFit: "cover" }} />
+            </span>
+            <span style={{ ...tokenChip, marginLeft: -10 }}>
+              <img src="/tokens/usdc.png" alt="USDC" style={{ width: 20, height: 20, borderRadius: "50%", objectFit: "cover" }} />
+            </span>
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ fontSize: 20, fontWeight: 800, color: "#e8eaf6" }}>XLM / USDC</span>
-              <span style={{ ...pill, background: "rgba(99,102,241,0.15)", color: "#a5b4fc" }}>0.3%</span>
+              <span style={{ fontSize: 20, fontWeight: 800, color: "oklch(0.12 0.01 60)" }}>XLM / USDC</span>
+              <span style={{ ...pill, background: "oklch(0.12 0.01 60 / 0.15)", color: "oklch(0.12 0.01 60)" }}>0.3%</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 2 }}>
               <span className="live-dot" />
-              <span style={{ fontSize: 13, color: "#9ca3af" }}>
+              <span style={{ fontSize: 13, color: "oklch(0.45 0.02 60)" }}>
                 ${fmtP(livePrice)}{" "}
                 <span style={{ color: change24h >= 0 ? "#22c55e" : "#ef4444" }}>
                   {change24h >= 0 ? "▲" : "▼"} {Math.abs(change24h * 100).toFixed(2)}%
                 </span>{" "}
-                <span style={{ color: "#6b7280" }}>· Coinbase live</span>
+                <span style={{ color: "oklch(0.45 0.02 60)" }}>· Coinbase live</span>
               </span>
             </div>
           </div>
@@ -302,12 +306,12 @@ export default function AddLiquidityPage() {
         {/* ── Left: Set Price Range ── */}
         <div className="glass-card" style={{ padding: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <h2 style={{ fontSize: 17, fontWeight: 700, color: "#e8eaf6" }}>Set Price Range</h2>
-            <span style={{ fontSize: 12, color: "#6b7280" }}>USDC per XLM</span>
+            <h2 style={{ fontSize: 17, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>Set Price Range</h2>
+            <span style={{ fontSize: 12, color: "oklch(0.45 0.02 60)" }}>USDC per XLM</span>
           </div>
 
           {!ticksReady ? (
-            <div style={{ height: 320, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "#9ca3af", fontSize: 13 }}>
+            <div style={{ height: 320, display: "flex", alignItems: "center", justifyContent: "center", gap: 10, color: "oklch(0.45 0.02 60)", fontSize: 13 }}>
               <div className="spinner" style={{ width: 16, height: 16 }} />
               Loading live price…
             </div>
@@ -338,39 +342,39 @@ export default function AddLiquidityPage() {
                 onClick={() => applyPresetPct(p.pct)}
                 style={{
                   padding: "7px 13px", borderRadius: 8, border: "1px solid",
-                  borderColor: activePreset === p.pct ? "rgba(34,211,238,0.5)" : "rgba(99,102,241,0.15)",
-                  background: activePreset === p.pct ? "rgba(34,211,238,0.12)" : "transparent",
-                  color: activePreset === p.pct ? "#67e8f9" : "#9ca3af",
+                  borderColor: activePreset === p.pct ? "oklch(0.12 0.01 60 / 0.5)" : "oklch(0.12 0.01 60 / 0.15)",
+                  background: activePreset === p.pct ? "oklch(0.12 0.01 60 / 0.12)" : "transparent",
+                  color: activePreset === p.pct ? "oklch(0.12 0.01 60)" : "oklch(0.45 0.02 60)",
                   cursor: "pointer", fontWeight: 600, fontSize: 13,
                 }}
               >
                 {p.label}
               </button>
             ))}
-            <span style={{ fontSize: 12, color: "#6b7280", alignSelf: "center", marginLeft: 4 }}>
+            <span style={{ fontSize: 12, color: "oklch(0.45 0.02 60)", alignSelf: "center", marginLeft: 4 }}>
               Ticks {tickLower} → {tickUpper}
             </span>
           </div>
 
           {/* Estimated APR */}
-          <div style={{ marginTop: 20, padding: "16px 18px", background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.12)", borderRadius: 12 }}>
+          <div style={{ marginTop: 20, padding: "16px 18px", background: "oklch(0.12 0.01 60 / 0.05)", border: "1px solid oklch(0.12 0.01 60 / 0.12)", borderRadius: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <span style={{ fontSize: 14, fontWeight: 700, color: "#e8eaf6" }}>Estimated APR</span>
-              <div style={{ display: "flex", gap: 4, background: "rgba(13,14,20,0.6)", borderRadius: 8, padding: 3 }}>
+              <span style={{ fontSize: 14, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>Estimated APR</span>
+              <div style={{ display: "flex", gap: 4, background: "oklch(0.94 0.005 90)", borderRadius: 8, padding: 3 }}>
                 {(["24H", "7D", "30D"] as const).map((w) => (
                   <button key={w} onClick={() => setAprWindow(w)} style={{
                     padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600,
-                    background: aprWindow === w ? "rgba(99,102,241,0.25)" : "transparent",
-                    color: aprWindow === w ? "#a5b4fc" : "#6b7280",
+                    background: aprWindow === w ? "oklch(0.12 0.01 60 / 0.25)" : "transparent",
+                    color: aprWindow === w ? "oklch(0.12 0.01 60)" : "oklch(0.45 0.02 60)",
                   }}>{w}</button>
                 ))}
               </div>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <span style={{ fontSize: 26, fontWeight: 800, color: "#e8eaf6" }}>{estApr.toFixed(2)}%</span>
+              <span style={{ fontSize: 26, fontWeight: 800, color: "oklch(0.12 0.01 60)" }}>{estApr.toFixed(2)}%</span>
               <AprDonut aprPct={estApr} />
-              <div style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.5 }}>
-                <div><span style={{ color: "#8b5cf6" }}>●</span> Trade fees (0.3% tier)</div>
+              <div style={{ fontSize: 12, color: "oklch(0.45 0.02 60)", lineHeight: 1.5 }}>
+                <div><span style={{ color: "oklch(0.12 0.01 60)" }}>●</span> Trade fees (0.3% tier)</div>
                 <div style={{ marginTop: 2 }}>Estimated — narrower range earns more</div>
               </div>
             </div>
@@ -379,7 +383,7 @@ export default function AddLiquidityPage() {
 
         {/* ── Right: Add Deposit Amount ── */}
         <div className="glass-card" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 14 }}>
-          <h2 style={{ fontSize: 17, fontWeight: 700, color: "#e8eaf6" }}>Add Deposit Amount</h2>
+          <h2 style={{ fontSize: 17, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>Add Deposit Amount</h2>
 
           {(price0Only || price1Only) && (
             <div style={{ background: "rgba(234,179,8,0.08)", border: "1px solid rgba(234,179,8,0.25)", borderRadius: 10, padding: "10px 14px", fontSize: 12, color: "#ca8a04", lineHeight: 1.5 }}>
@@ -390,7 +394,7 @@ export default function AddLiquidityPage() {
           )}
 
           <TokenBox
-            symbol="XLM" icon="⭐"
+            symbol="XLM" icon="/tokens/xlm.png"
             value={amountXlm}
             usd={xlmValue}
             balance={balances ? parseFloat(fromStroops(balances.xlm)) : null}
@@ -401,11 +405,11 @@ export default function AddLiquidityPage() {
           />
 
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(99,102,241,0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "#a5b4fc", fontSize: 18 }}>+</div>
+            <div style={{ width: 32, height: 32, borderRadius: "50%", background: "oklch(0.12 0.01 60 / 0.15)", display: "flex", alignItems: "center", justifyContent: "center", color: "oklch(0.12 0.01 60)", fontSize: 18 }}>+</div>
           </div>
 
           <TokenBox
-            symbol="USDC" icon="💵"
+            symbol="USDC" icon="/tokens/usdc.png"
             value={amountUsdc}
             usd={usdcValue}
             balance={balances ? parseFloat(fromStroops(balances.usdc)) : null}
@@ -416,18 +420,23 @@ export default function AddLiquidityPage() {
           />
 
           {/* Totals */}
-          <div style={{ background: "rgba(99,102,241,0.05)", border: "1px solid rgba(99,102,241,0.12)", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ background: "oklch(0.12 0.01 60 / 0.05)", border: "1px solid oklch(0.12 0.01 60 / 0.12)", borderRadius: 12, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ color: "#9ca3af", fontSize: 13 }}>Total Deposit</span>
-              <span style={{ color: "#e8eaf6", fontSize: 16, fontWeight: 700 }}>{totalValue > 0 ? formatUsd(totalValue) : "$0.00"}</span>
+              <span style={{ color: "oklch(0.45 0.02 60)", fontSize: 13 }}>Total Deposit</span>
+              <span style={{ color: "oklch(0.12 0.01 60)", fontSize: 16, fontWeight: 700 }}>{totalValue > 0 ? formatUsd(totalValue) : "$0.00"}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span style={{ color: "#9ca3af", fontSize: 13 }}>Deposit Ratio</span>
-              <span style={{ color: "#9ca3af", fontSize: 12 }}>{ratioXlm.toFixed(1)}% ⭐ / {ratioUsdc.toFixed(1)}% 💵</span>
+              <span style={{ color: "oklch(0.45 0.02 60)", fontSize: 13 }}>Deposit Ratio</span>
+              <span style={{ color: "oklch(0.45 0.02 60)", fontSize: 12, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                {ratioXlm.toFixed(1)}%
+                <img src="/tokens/xlm.png" alt="XLM" style={{ width: 12, height: 12, borderRadius: "50%", objectFit: "cover" }} />
+                / {ratioUsdc.toFixed(1)}%
+                <img src="/tokens/usdc.png" alt="USDC" style={{ width: 12, height: 12, borderRadius: "50%", objectFit: "cover" }} />
+              </span>
             </div>
-            <div style={{ display: "flex", height: 6, borderRadius: 4, overflow: "hidden", background: "rgba(13,14,20,0.6)" }}>
-              <div style={{ width: `${ratioXlm}%`, background: "#06b6d4" }} />
-              <div style={{ width: `${ratioUsdc}%`, background: "#8b5cf6" }} />
+            <div style={{ display: "flex", height: 6, borderRadius: 4, overflow: "hidden", background: "oklch(0.94 0.005 90)" }}>
+              <div style={{ width: `${ratioXlm}%`, background: "oklch(0.12 0.01 60)" }} />
+              <div style={{ width: `${ratioUsdc}%`, background: "oklch(0.65 0.02 60)" }} />
             </div>
           </div>
 
@@ -447,8 +456,8 @@ export default function AddLiquidityPage() {
 // ── Subcomponents ──────────────────────────────────────────────────────────
 
 const tokenChip: React.CSSProperties = {
-  width: 32, height: 32, borderRadius: "50%", background: "rgba(99,102,241,0.12)",
-  border: "1px solid rgba(99,102,241,0.2)", display: "flex", alignItems: "center",
+  width: 32, height: 32, borderRadius: "50%", background: "oklch(0.12 0.01 60 / 0.12)",
+  border: "1px solid oklch(0.12 0.01 60 / 0.2)", display: "flex", alignItems: "center",
   justifyContent: "center", fontSize: 16,
 };
 const pill: React.CSSProperties = { fontSize: 12, fontWeight: 700, borderRadius: 20, padding: "2px 10px" };
@@ -456,26 +465,26 @@ const pill: React.CSSProperties = { fontSize: 12, fontWeight: 700, borderRadius:
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div>
-      <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 3 }}>{label}</div>
-      <div style={{ fontSize: 16, fontWeight: 700, color: "#e8eaf6" }}>{value}</div>
-      {sub && <div style={{ fontSize: 11, color: "#6b7280" }}>{sub}</div>}
+      <div style={{ fontSize: 11, color: "oklch(0.45 0.02 60)", marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 16, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>{value}</div>
+      {sub && <div style={{ fontSize: 11, color: "oklch(0.45 0.02 60)" }}>{sub}</div>}
     </div>
   );
 }
 
 function PriceField({ label, sub, value, onCommit }: { label: string; sub: string; value: number; onCommit: (v: number) => void }) {
   return (
-    <div style={{ background: "rgba(99,102,241,0.04)", border: "1px solid rgba(99,102,241,0.12)", borderRadius: 10, padding: "10px 14px" }}>
-      <div style={{ fontSize: 11, color: "#6b7280", marginBottom: 6 }}>{label}</div>
+    <div style={{ background: "oklch(0.12 0.01 60 / 0.04)", border: "1px solid oklch(0.12 0.01 60 / 0.12)", borderRadius: 10, padding: "10px 14px" }}>
+      <div style={{ fontSize: 11, color: "oklch(0.45 0.02 60)", marginBottom: 6 }}>{label}</div>
       <input
         type="number" step="any"
         key={value.toFixed(8)}
         defaultValue={value >= 1 ? value.toFixed(4) : value.toFixed(6)}
         onBlur={(e) => { const p = parseFloat(e.target.value); if (p > 0) onCommit(p); }}
         onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
-        style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: "#e8eaf6", fontSize: 16, fontWeight: 700, fontFamily: "monospace" }}
+        style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: "oklch(0.12 0.01 60)", fontSize: 16, fontWeight: 700, fontFamily: "var(--font-jetbrains)" }}
       />
-      <div style={{ fontSize: 11, color: "#6b7280", marginTop: 2 }}>{sub}</div>
+      <div style={{ fontSize: 11, color: "oklch(0.45 0.02 60)", marginTop: 2 }}>{sub}</div>
     </div>
   );
 }
@@ -485,14 +494,14 @@ function TokenBox({ symbol, icon, value, usd, balance, disabled, onChange, onMax
   disabled: boolean; onChange: (v: string) => void; onMax: () => void; onHalf: () => void;
 }) {
   return (
-    <div style={{ background: "#0f1117", border: "1px solid rgba(99,102,241,0.15)", borderRadius: 12, padding: 16, opacity: disabled ? 0.45 : 1 }}>
+    <div style={{ background: "oklch(0.92 0.01 90)", border: "1px solid oklch(0.12 0.01 60 / 0.15)", borderRadius: 12, padding: 16, opacity: disabled ? 0.45 : 1 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-        <span style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(99,102,241,0.08)", border: "1px solid rgba(99,102,241,0.15)", borderRadius: 8, padding: "6px 12px" }}>
-          <span style={{ fontSize: 18 }}>{icon}</span>
-          <span style={{ color: "#e8eaf6", fontWeight: 700, fontSize: 14 }}>{symbol}</span>
+        <span style={{ display: "flex", alignItems: "center", gap: 8, background: "oklch(0.12 0.01 60 / 0.08)", border: "1px solid oklch(0.12 0.01 60 / 0.15)", borderRadius: 8, padding: "6px 12px" }}>
+          <img src={icon} alt={symbol} style={{ width: 20, height: 20, borderRadius: "50%", objectFit: "cover" }} />
+          <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: 14 }}>{symbol}</span>
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ fontSize: 11, color: "#6b7280" }}>Bal {balance !== null ? balance.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "—"}</span>
+          <span style={{ fontSize: 11, color: "oklch(0.45 0.02 60)" }}>Bal {balance !== null ? balance.toLocaleString(undefined, { maximumFractionDigits: 2 }) : "—"}</span>
           <button onClick={onHalf} disabled={disabled} style={miniBtn}>50%</button>
           <button onClick={onMax} disabled={disabled} style={miniBtn}>Max</button>
         </div>
@@ -501,16 +510,16 @@ function TokenBox({ symbol, icon, value, usd, balance, disabled, onChange, onMax
         type="text" inputMode="decimal" placeholder="0.0"
         value={value} disabled={disabled}
         onChange={(e) => onChange(e.target.value)}
-        style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: "#e8eaf6", fontSize: 24, fontWeight: 600, textAlign: "right", fontFamily: "monospace" }}
+        style={{ width: "100%", background: "transparent", border: "none", outline: "none", color: "oklch(0.12 0.01 60)", fontSize: 24, fontWeight: 600, textAlign: "right", fontFamily: "var(--font-jetbrains)" }}
       />
-      {usd > 0 && <div style={{ fontSize: 11, color: "#6b7280", textAlign: "right", marginTop: 4 }}>≈ {formatUsd(usd)}</div>}
+      {usd > 0 && <div style={{ fontSize: 11, color: "oklch(0.45 0.02 60)", textAlign: "right", marginTop: 4 }}>≈ {formatUsd(usd)}</div>}
     </div>
   );
 }
 
 const miniBtn: React.CSSProperties = {
-  padding: "3px 8px", borderRadius: 6, border: "1px solid rgba(99,102,241,0.2)",
-  background: "transparent", color: "#a5b4fc", cursor: "pointer", fontSize: 11, fontWeight: 600,
+  padding: "3px 8px", borderRadius: 6, border: "1px solid oklch(0.12 0.01 60 / 0.2)",
+  background: "transparent", color: "oklch(0.12 0.01 60)", cursor: "pointer", fontSize: 11, fontWeight: 600,
 };
 
 function compact(n: number): string {

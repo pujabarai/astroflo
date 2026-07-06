@@ -55,14 +55,14 @@ export default function ContractStatus() {
     <div className="glass-card" style={{ padding: 20, marginBottom: 32 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
         <span className="live-dot" />
-        <h2 style={{ fontSize: 15, fontWeight: 700, color: "#e8eaf6" }}>
+        <h2 style={{ fontSize: 15, fontWeight: 700, color: "oklch(0.12 0.01 60)" }}>
           On-chain Pool State
         </h2>
         <a
           href={`https://stellar.expert/explorer/testnet/contract/${CONTRACT_ID}`}
           target="_blank"
           rel="noopener noreferrer"
-          style={{ marginLeft: "auto", color: "#6b7280", fontFamily: "monospace", fontSize: 12 }}
+          style={{ marginLeft: "auto", color: "oklch(0.45 0.02 60)", fontFamily: "var(--font-jetbrains)", fontSize: 12 }}
         >
           {shortId} ↗
         </a>
@@ -73,7 +73,7 @@ export default function ContractStatus() {
           style={{
             height: 48,
             borderRadius: 10,
-            background: "rgba(99,102,241,0.06)",
+            background: "oklch(0.12 0.01 60 / 0.06)",
             animation: "pulse 1.5s ease-in-out infinite",
           }}
         />
@@ -98,8 +98,8 @@ export default function ContractStatus() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p style={{ color: "#6b7280", fontSize: 11, marginBottom: 3 }}>{label}</p>
-      <p style={{ color: "#a5b4fc", fontSize: 16, fontWeight: 700, fontFamily: "monospace" }}>
+      <p style={{ color: "oklch(0.45 0.02 60)", fontSize: 11, marginBottom: 3 }}>{label}</p>
+      <p style={{ color: "oklch(0.12 0.01 60)", fontSize: 16, fontWeight: 700, fontFamily: "var(--font-jetbrains)" }}>
         {value}
       </p>
     </div>

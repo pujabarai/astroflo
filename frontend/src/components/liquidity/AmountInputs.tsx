@@ -30,7 +30,7 @@ export default function AmountInputs({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-      <p style={{ color: "#6b7280", fontSize: "12px", fontWeight: 600 }}>
+      <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "12px", fontWeight: 600 }}>
         DEPOSIT AMOUNTS
       </p>
 
@@ -65,17 +65,17 @@ export default function AmountInputs({
       {/* Disabled when price0Only (below range): XLM contribution is 0 */}
       <div
         style={{
-          background: "#0f1117",
-          border: `1px solid ${price0Only ? "rgba(99,102,241,0.05)" : "rgba(99,102,241,0.15)"}`,
+          background: "oklch(0.92 0.01 90)",
+          border: `1px solid ${price0Only ? "oklch(0.12 0.01 60 / 0.05)" : "oklch(0.12 0.01 60 / 0.15)"}`,
           borderRadius: "12px",
           padding: "16px",
           opacity: price0Only ? 0.4 : 1,
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-          <span style={{ color: "#6b7280", fontSize: "12px" }}>XLM Amount</span>
+          <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "12px" }}>XLM Amount</span>
           {price0Only && (
-            <span style={{ color: "#6b7280", fontSize: "11px" }}>
+            <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>
               Price above range — no XLM needed
             </span>
           )}
@@ -83,8 +83,8 @@ export default function AmountInputs({
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div
             style={{
-              background: "rgba(99,102,241,0.08)",
-              border: "1px solid rgba(99,102,241,0.15)",
+              background: "oklch(0.12 0.01 60 / 0.08)",
+              border: "1px solid oklch(0.12 0.01 60 / 0.15)",
               borderRadius: "8px",
               padding: "6px 12px",
               display: "flex",
@@ -94,7 +94,7 @@ export default function AmountInputs({
             }}
           >
             <span style={{ fontSize: "18px" }}>⭐</span>
-            <span style={{ color: "#e8eaf6", fontWeight: 700, fontSize: "14px" }}>
+            <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "14px" }}>
               XLM
             </span>
           </div>
@@ -110,16 +110,16 @@ export default function AmountInputs({
               background: "transparent",
               border: "none",
               outline: "none",
-              color: "#e8eaf6",
+              color: "oklch(0.12 0.01 60)",
               fontSize: "20px",
               fontWeight: 600,
               textAlign: "right",
-              fontFamily: "monospace",
+              fontFamily: "var(--font-jetbrains)",
             }}
           />
         </div>
         {xlmUsd > 0 && !price0Only && (
-          <p style={{ color: "#6b7280", fontSize: "11px", textAlign: "right", marginTop: "4px" }}>
+          <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px", textAlign: "right", marginTop: "4px" }}>
             ≈ {formatUsd(xlmUsd)}
           </p>
         )}
@@ -129,17 +129,17 @@ export default function AmountInputs({
       {/* Disabled when price1Only (above range): USDC contribution is 0 */}
       <div
         style={{
-          background: "#0f1117",
-          border: `1px solid ${price1Only ? "rgba(99,102,241,0.05)" : "rgba(99,102,241,0.15)"}`,
+          background: "oklch(0.92 0.01 90)",
+          border: `1px solid ${price1Only ? "oklch(0.12 0.01 60 / 0.05)" : "oklch(0.12 0.01 60 / 0.15)"}`,
           borderRadius: "12px",
           padding: "16px",
           opacity: price1Only ? 0.4 : 1,
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-          <span style={{ color: "#6b7280", fontSize: "12px" }}>USDC Amount</span>
+          <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "12px" }}>USDC Amount</span>
           {price1Only && (
-            <span style={{ color: "#6b7280", fontSize: "11px" }}>
+            <span style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>
               Price below range — no USDC needed
             </span>
           )}
@@ -147,8 +147,8 @@ export default function AmountInputs({
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div
             style={{
-              background: "rgba(99,102,241,0.08)",
-              border: "1px solid rgba(99,102,241,0.15)",
+              background: "oklch(0.12 0.01 60 / 0.08)",
+              border: "1px solid oklch(0.12 0.01 60 / 0.15)",
               borderRadius: "8px",
               padding: "6px 12px",
               display: "flex",
@@ -158,7 +158,7 @@ export default function AmountInputs({
             }}
           >
             <span style={{ fontSize: "18px" }}>💵</span>
-            <span style={{ color: "#e8eaf6", fontWeight: 700, fontSize: "14px" }}>
+            <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "14px" }}>
               USDC
             </span>
           </div>
@@ -174,16 +174,16 @@ export default function AmountInputs({
               background: "transparent",
               border: "none",
               outline: "none",
-              color: "#e8eaf6",
+              color: "oklch(0.12 0.01 60)",
               fontSize: "20px",
               fontWeight: 600,
               textAlign: "right",
-              fontFamily: "monospace",
+              fontFamily: "var(--font-jetbrains)",
             }}
           />
         </div>
         {usdcUsd > 0 && !price1Only && (
-          <p style={{ color: "#6b7280", fontSize: "11px", textAlign: "right", marginTop: "4px" }}>
+          <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px", textAlign: "right", marginTop: "4px" }}>
             ≈ {formatUsd(usdcUsd)}
           </p>
         )}
@@ -196,12 +196,12 @@ export default function AmountInputs({
             display: "flex",
             justifyContent: "space-between",
             fontSize: "12px",
-            color: "#6b7280",
+            color: "oklch(0.45 0.02 60)",
             padding: "0 4px",
           }}
         >
           <span>Total deposit value</span>
-          <span style={{ color: "#e8eaf6", fontWeight: 600 }}>{formatUsd(totalUsd)}</span>
+          <span style={{ color: "oklch(0.12 0.01 60)", fontWeight: 600 }}>{formatUsd(totalUsd)}</span>
         </div>
       )}
     </div>

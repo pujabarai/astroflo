@@ -64,7 +64,7 @@ export default function RangeSelector({
     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
       {/* Presets */}
       <div>
-        <p style={{ color: "#6b7280", fontSize: "12px", marginBottom: "8px", fontWeight: 600 }}>
+        <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "12px", marginBottom: "8px", fontWeight: 600 }}>
           RANGE PRESETS
         </p>
         <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
@@ -79,9 +79,9 @@ export default function RangeSelector({
                   padding: "8px 14px",
                   borderRadius: "8px",
                   border: "1px solid",
-                  borderColor: active ? "rgba(99,102,241,0.5)" : "rgba(99,102,241,0.15)",
-                  background: active ? "rgba(99,102,241,0.2)" : "transparent",
-                  color: active ? "#a5b4fc" : "#9ca3af",
+                  borderColor: active ? "oklch(0.12 0.01 60 / 0.5)" : "oklch(0.12 0.01 60 / 0.15)",
+                  background: active ? "oklch(0.12 0.01 60 / 0.2)" : "transparent",
+                  color: active ? "oklch(0.12 0.01 60)" : "oklch(0.45 0.02 60)",
                   cursor: "pointer",
                   fontWeight: 600,
                   fontSize: "13px",
@@ -116,8 +116,8 @@ export default function RangeSelector({
       {/* Current price indicator */}
       <div
         style={{
-          background: "rgba(99,102,241,0.05)",
-          border: "1px solid rgba(99,102,241,0.1)",
+          background: "oklch(0.12 0.01 60 / 0.05)",
+          border: "1px solid oklch(0.12 0.01 60 / 0.1)",
           borderRadius: "10px",
           padding: "12px 16px",
           display: "flex",
@@ -126,19 +126,19 @@ export default function RangeSelector({
         }}
       >
         <div>
-          <p style={{ color: "#6b7280", fontSize: "11px" }}>CURRENT PRICE</p>
-          <p style={{ color: "#e8eaf6", fontWeight: 700, fontSize: "16px" }}>
+          <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>CURRENT PRICE</p>
+          <p style={{ color: "oklch(0.12 0.01 60)", fontWeight: 700, fontSize: "16px" }}>
             ${currentUsdcPerXlm.toFixed(4)}
           </p>
-          <p style={{ color: "#6b7280", fontSize: "11px" }}>USDC per XLM</p>
+          <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>USDC per XLM</p>
         </div>
         <div style={{ textAlign: "right" }}>
-          <p style={{ color: "#6b7280", fontSize: "11px" }}>RANGE WIDTH</p>
-          <p style={{ color: "#a5b4fc", fontWeight: 600, fontSize: "14px" }}>
+          <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>RANGE WIDTH</p>
+          <p style={{ color: "oklch(0.12 0.01 60)", fontWeight: 600, fontSize: "14px" }}>
             {rangePct}
           </p>
           {!isFullRange && (
-            <p style={{ color: "#6b7280", fontSize: "11px" }}>
+            <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>
               Ticks: {tickLower} → {tickUpper}
             </p>
           )}
@@ -180,13 +180,13 @@ function PriceInput({
   return (
     <div
       style={{
-        background: "rgba(99,102,241,0.04)",
-        border: `1px solid ${warning ? "rgba(234,179,8,0.3)" : "rgba(99,102,241,0.12)"}`,
+        background: "oklch(0.12 0.01 60 / 0.04)",
+        border: `1px solid ${warning ? "rgba(234,179,8,0.3)" : "oklch(0.12 0.01 60 / 0.12)"}`,
         borderRadius: "10px",
         padding: "12px 14px",
       }}
     >
-      <p style={{ color: "#6b7280", fontSize: "11px", marginBottom: "8px" }}>
+      <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px", marginBottom: "8px" }}>
         {label}
       </p>
       <input
@@ -200,13 +200,13 @@ function PriceInput({
           background: "transparent",
           border: "none",
           outline: "none",
-          color: "#e8eaf6",
+          color: "oklch(0.12 0.01 60)",
           fontSize: "16px",
           fontWeight: 700,
-          fontFamily: "monospace",
+          fontFamily: "var(--font-jetbrains)",
         }}
       />
-      <p style={{ color: "#6b7280", fontSize: "11px", marginTop: "4px" }}>
+      <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px", marginTop: "4px" }}>
         {sublabel}
       </p>
       {warning && (

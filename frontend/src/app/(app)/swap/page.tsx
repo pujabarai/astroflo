@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Repeat, SlidersHorizontal } from "lucide-react";
 import TokenInputBox from "@/components/swap/TokenInputBox";
 import PriceInfo from "@/components/swap/PriceInfo";
 import SlippageSettings from "@/components/swap/SlippageSettings";
@@ -14,8 +15,8 @@ import { submitTransaction, getLatestLedger } from "@/lib/stellar";
 import { XLM_ADDRESS, USDC_ADDRESS, FEE_TIER, POOL_ADDRESS } from "@/lib/constants";
 import { useToast } from "@/components/Toast";
 
-const XLM = { symbol: "XLM", name: "Stellar Lumens", logo: "⭐" };
-const USDC = { symbol: "USDC", name: "USD Coin", logo: "💵" };
+const XLM = { symbol: "XLM", name: "Stellar Lumens", logo: "/tokens/xlm.png" };
+const USDC = { symbol: "USDC", name: "USD Coin", logo: "/tokens/usdc.png" };
 
 export default function SwapPage() {
   const { address, connect, sign } = useWallet();
@@ -169,104 +170,108 @@ export default function SwapPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: "40px 16px",
-        background:
-          "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(99,102,241,0.06) 0%, transparent 100%)",
       }}
     >
-      <div style={{ width: "100%", maxWidth: "440px" }}>
-        {/* Header */}
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: "24px",
-          }}
-        >
-          <h1
-            className="gradient-text"
-            style={{ fontSize: "28px", fontWeight: 800, marginBottom: "6px" }}
-          >
-            Swap
-          </h1>
-          <p style={{ color: "#6b7280", fontSize: "14px" }}>
-            Trade XLM ↔ USDC on Stellar Testnet
-          </p>
+      <div style={{ width: "100%", maxWidth: "460px", position: "relative" }}>
+        {/* Floating settings button */}
+        <div className="swap-settings-btn">
+          <SlippageSettings
+            slippage={slippage}
+            onChange={setSlippage}
+            trigger={
+              <button
+                style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  background: "oklch(1 0 0)",
+                  border: "1px solid oklch(0.12 0.01 60 / 0.08)",
+                  boxShadow: "0 2px 8px oklch(0.12 0.01 60 / 0.1)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                title="Slippage settings"
+              >
+                <SlidersHorizontal size={20} style={{ color: "oklch(0.12 0.01 60)", transform: "rotate(90deg)" }} />
+              </button>
+            }
+          />
         </div>
 
         {/* Card */}
         <div
-          className="glass-card"
-          style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "4px" }}
+          style={{
+            background: "oklch(1 0 0)",
+            borderRadius: "36px",
+            padding: "12px",
+            boxShadow: "0 8px 32px oklch(0.12 0.01 60 / 0.06)",
+          }}
         >
-          {/* Top bar: slippage */}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "8px",
-            }}
-          >
-            <SlippageSettings slippage={slippage} onChange={setSlippage} />
-          </div>
+          <div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "8px" }}>
+            {/* Sell */}
+            <TokenInputBox
+              token={tokenIn}
+              value={amountIn}
+              onChange={setAmountIn}
+              label="Sell"
+              usdValue={
+                amountInUsd > 0 && !prices.isError ? formatUsd(amountInUsd).replace("$", "") : undefined
+              }
+            />
 
-          {/* Token In */}
-          <TokenInputBox
-            token={tokenIn}
-            value={amountIn}
-            onChange={setAmountIn}
-            label="You Pay"
-            usdValue={
-              amountInUsd > 0 && !prices.isError ? formatUsd(amountInUsd).replace("$", "") : undefined
-            }
-            onMax={
-              address
-                ? () => setAmountIn("1000")
-                : undefined
-            }
-          />
-
-          {/* Flip button */}
-          <div style={{ display: "flex", justifyContent: "center", margin: "8px 0" }}>
-            <button
-              onClick={() => {
-                setZeroForOne((z) => !z);
-                setAmountIn("");
-              }}
+            {/* Flip button — sits on the seam between the two panels */}
+            <div
               style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                background: "rgba(99,102,241,0.15)",
-                border: "1px solid rgba(99,102,241,0.3)",
-                color: "#a5b4fc",
-                fontSize: "18px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "background 0.2s",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 1,
               }}
-              title="Flip tokens"
             >
-              ⇅
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  setZeroForOne((z) => !z);
+                  setAmountIn("");
+                }}
+                style={{
+                  width: "52px",
+                  height: "52px",
+                  borderRadius: "50%",
+                  background: "oklch(1 0 0)",
+                  border: "1px solid oklch(0.12 0.01 60 / 0.08)",
+                  boxShadow: "0 2px 8px oklch(0.12 0.01 60 / 0.12)",
+                  color: "oklch(0.12 0.01 60)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                title="Flip tokens"
+              >
+                <Repeat size={20} />
+              </button>
+            </div>
 
-          {/* Token Out */}
-          <TokenInputBox
-            token={tokenOut}
-            value={amountOut}
-            readOnly
-            label="You Receive"
-            loading={quoteFetching && amountInStroops > 0n}
-            usdValue={(() => {
-              const outUsd = toUsd(amountOutNum, zeroForOne ? "usdc" : "xlm", prices);
-              return outUsd > 0 && !prices.isError ? formatUsd(outUsd).replace("$", "") : undefined;
-            })()}
-          />
+            {/* Buy */}
+            <TokenInputBox
+              token={tokenOut}
+              value={amountOut}
+              readOnly
+              label="Buy"
+              loading={quoteFetching && amountInStroops > 0n}
+              usdValue={(() => {
+                const outUsd = toUsd(amountOutNum, zeroForOne ? "usdc" : "xlm", prices);
+                return outUsd > 0 && !prices.isError ? formatUsd(outUsd).replace("$", "") : undefined;
+              })()}
+            />
+          </div>
 
           {/* Price info */}
           {quote && amountOut && (
-            <div style={{ marginTop: "12px" }}>
+            <div style={{ margin: "16px 4px 0" }}>
               <PriceInfo
                 rate={rate}
                 priceImpact={priceImpactResult.impact}
@@ -287,9 +292,13 @@ export default function SwapPage() {
             disabled={!canSwap && Boolean(address)}
             style={{
               width: "100%",
-              padding: "16px",
-              fontSize: "16px",
-              marginTop: "16px",
+              padding: "20px",
+              fontSize: "15px",
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              borderRadius: "24px",
+              marginTop: "12px",
             }}
           >
             {loading ? (
@@ -315,7 +324,7 @@ export default function SwapPage() {
         {pool && (
           <div
             style={{
-              marginTop: "16px",
+              marginTop: "20px",
               display: "flex",
               justifyContent: "center",
               gap: "24px",
@@ -327,8 +336,8 @@ export default function SwapPage() {
               { label: "Fee", value: "0.3%" },
             ].map(({ label, value }) => (
               <div key={label} style={{ textAlign: "center" }}>
-                <p style={{ color: "#6b7280", fontSize: "11px" }}>{label}</p>
-                <p style={{ color: "#9ca3af", fontSize: "13px", fontWeight: 600 }}>
+                <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "11px" }}>{label}</p>
+                <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "13px", fontWeight: 600 }}>
                   {value}
                 </p>
               </div>

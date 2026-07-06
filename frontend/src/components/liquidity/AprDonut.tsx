@@ -14,13 +14,13 @@ export default function AprDonut({ aprPct }: Props) {
   const frac = Math.max(0.04, Math.min(1, aprPct / 100));
   return (
     <svg width={64} height={64} viewBox="0 0 64 64">
-      <circle cx={32} cy={32} r={R} fill="none" stroke="rgba(99,102,241,0.15)" strokeWidth={7} />
+      <circle cx={32} cy={32} r={R} fill="none" stroke="oklch(0.12 0.01 60 / 0.12)" strokeWidth={7} />
       <circle
         cx={32}
         cy={32}
         r={R}
         fill="none"
-        stroke="#8b5cf6"
+        stroke="oklch(0.12 0.01 60)"
         strokeWidth={7}
         strokeLinecap="round"
         strokeDasharray={`${C * frac} ${C}`}

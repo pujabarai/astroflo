@@ -27,7 +27,7 @@ export default function PortfolioPage() {
         margin: "0 auto",
         padding: "40px 24px",
         background:
-          "radial-gradient(ellipse 60% 40% at 50% 0%, rgba(99,102,241,0.05) 0%, transparent 100%)",
+          "radial-gradient(ellipse 60% 40% at 50% 0%, oklch(0.12 0.01 60 / 0.05) 0%, transparent 100%)",
       }}
     >
       {/* Header */}
@@ -38,7 +38,7 @@ export default function PortfolioPage() {
         >
           Portfolio
         </h1>
-        <p style={{ color: "#6b7280", fontSize: "14px" }}>
+        <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "14px" }}>
           {address
             ? `${address.slice(0, 8)}...${address.slice(-6)}`
             : "Connect a wallet to view your positions, fees, and activity"}
@@ -56,18 +56,17 @@ export default function PortfolioPage() {
           style={{
             textAlign: "center",
             padding: "48px 24px",
-            background: "rgba(26,29,46,0.4)",
-            border: "1px solid rgba(99,102,241,0.1)",
+            background: "oklch(0.94 0.005 90)",
+            border: "1px solid oklch(0.12 0.01 60 / 0.1)",
             borderRadius: "16px",
           }}
         >
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>🔒</div>
           <h2
-            style={{ color: "#e8eaf6", fontSize: "20px", fontWeight: 700, marginBottom: "10px" }}
+            style={{ color: "oklch(0.12 0.01 60)", fontSize: "20px", fontWeight: 700, marginBottom: "10px" }}
           >
             Connect to view your positions
           </h2>
-          <p style={{ color: "#6b7280", marginBottom: "24px" }}>
+          <p style={{ color: "oklch(0.45 0.02 60)", marginBottom: "24px" }}>
             Your liquidity positions, fees, and activity will appear here.
           </p>
           <button
@@ -95,7 +94,7 @@ export default function PortfolioPage() {
             marginBottom: "16px",
           }}
         >
-          <h2 style={{ color: "#e8eaf6", fontSize: "18px", fontWeight: 700 }}>
+          <h2 style={{ color: "oklch(0.12 0.01 60)", fontSize: "18px", fontWeight: 700 }}>
             Positions
           </h2>
           <Link href="/liquidity/new" style={{ textDecoration: "none" }}>
@@ -115,7 +114,7 @@ export default function PortfolioPage() {
                 key={i}
                 style={{
                   height: "200px",
-                  background: "rgba(26,29,46,0.4)",
+                  background: "oklch(0.94 0.005 90)",
                   borderRadius: "16px",
                   animation: "pulse 1.5s infinite",
                 }}
@@ -137,16 +136,16 @@ export default function PortfolioPage() {
             style={{
               textAlign: "center",
               padding: "48px 24px",
-              background: "rgba(26,29,46,0.4)",
-              border: "1px solid rgba(99,102,241,0.1)",
+              background: "oklch(0.94 0.005 90)",
+              border: "1px solid oklch(0.12 0.01 60 / 0.1)",
               borderRadius: "16px",
             }}
           >
             <div style={{ fontSize: "40px", marginBottom: "14px" }}>📭</div>
-            <p style={{ color: "#e8eaf6", fontWeight: 600, marginBottom: "6px" }}>
+            <p style={{ color: "oklch(0.12 0.01 60)", fontWeight: 600, marginBottom: "6px" }}>
               No positions found
             </p>
-            <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px" }}>
+            <p style={{ color: "oklch(0.45 0.02 60)", fontSize: "14px", marginBottom: "20px" }}>
               Add liquidity to start earning fees
             </p>
             <Link href="/liquidity/new" style={{ textDecoration: "none" }}>
@@ -165,7 +164,7 @@ export default function PortfolioPage() {
       <div>
         <h2
           style={{
-            color: "#e8eaf6",
+            color: "oklch(0.12 0.01 60)",
             fontSize: "18px",
             fontWeight: 700,
             marginBottom: "16px",
