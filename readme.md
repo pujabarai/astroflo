@@ -13,6 +13,59 @@
 
 </div>
 
+---
+
+## 🚀 Deployed Contracts (Stellar Testnet)
+
+**Network:** Stellar Testnet · Passphrase `Test SDF Network ; September 2015`
+
+**Live app:** https://astroflo.vercel.app · **Deployer:** `GAL6ZVVRE2RPFS2X23I65QANHHIBGHKTGGVIT5AJURRKTIMEVUMJJUZZ`
+
+| Contract | Deployed Address (testnet) | Explorer |
+|---|---|---|
+| **Factory** | `CDFY5UX77PQDP2QGNY4YGZVKK6FE6J2LSSVZFXTQSHRO2JIES7LSZGPE` | [view](https://stellar.expert/explorer/testnet/contract/CDFY5UX77PQDP2QGNY4YGZVKK6FE6J2LSSVZFXTQSHRO2JIES7LSZGPE) |
+| **Pool** (XLM/USDC 0.3%) | `CCYBX2FOT5RWL6T2CQROAA3ZECYNNE3PSJ7WQXULU6AJOCCK6YHSTH32` | [view](https://stellar.expert/explorer/testnet/contract/CCYBX2FOT5RWL6T2CQROAA3ZECYNNE3PSJ7WQXULU6AJOCCK6YHSTH32) |
+| **Router** | `CDLCGPUP7NW4B4SSFG5H4I75PKDGPUZDHOX5C6YICJY7RDJ7VP7BAT62` | [view](https://stellar.expert/explorer/testnet/contract/CDLCGPUP7NW4B4SSFG5H4I75PKDGPUZDHOX5C6YICJY7RDJ7VP7BAT62) |
+| **Position Manager** | `CC6IBQ7VNVK7CQYIZX47NJPDH5DL5ISQSA26BLBZXVMVEQ3QGUAZDREI` | [view](https://stellar.expert/explorer/testnet/contract/CC6IBQ7VNVK7CQYIZX47NJPDH5DL5ISQSA26BLBZXVMVEQ3QGUAZDREI) |
+| XLM (Stellar Asset Contract) | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` | [view](https://stellar.expert/explorer/testnet/contract/CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC) |
+| USDC (Stellar Asset Contract) | `CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA` | [view](https://stellar.expert/explorer/testnet/contract/CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA) |
+
+> USDC is a SAC wrapping the classic asset `USDC` issued by `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5` (issuer G-address, used only to build `change_trust` trustline txs — **not** for Soroban token calls).
+
+### Smart-contract folder structure
+
+```
+contracts/
+├── Cargo.toml            # Rust workspace (factory, pool, position_manager, router)
+├── Makefile              # build / test / deploy helpers
+├── factory/src/lib.rs           # deploy_pool, get_pool, registry
+├── pool/src/
+│   ├── lib.rs                    # core CLMM: swap, mint, burn, collect, slot0
+│   ├── swap.rs  tick.rs  tick_bitmap.rs  position.rs  storage.rs  events.rs  test.rs
+│   └── math/  (sqrt_price.rs, liquidity.rs, fixed_point.rs, mod.rs)
+├── position_manager/src/lib.rs  # NFT-style LP position wrapper
+└── router/src/lib.rs            # multi-hop / exact-in swap routing
+```
+
+### Contract ↔ frontend function mapping
+
+| Contract fn (Rust) | Frontend caller (TypeScript) |
+|---|---|
+| `pool.swap` | `frontend/src/lib/transactions.ts` ← `app/(app)/swap/page.tsx`, `hooks/useSwapQuote.ts` |
+| `pool.mint` / `position_manager.mint` | `frontend/src/lib/transactions.ts` ← `app/(app)/liquidity/new/page.tsx` |
+| `pool.burn` / `pool.collect` | `frontend/src/lib/transactions.ts` ← `components/liquidity/PositionCard.tsx` |
+| `pool.slot0` / `pool.liquidity` | `frontend/src/hooks/usePool.ts` (portfolio on-chain reads) |
+| `router.exact_input_single` / `exact_output_single` | on-chain router (single-pool UI calls `pool.swap` directly) |
+
+Contract IDs are wired through `frontend/src/lib/constants.ts` from `NEXT_PUBLIC_*` env vars (see [§23](#23-environment-variables)). Full evidence with tx-hash links: [§25 Deployment Evidence](#25-deployment-evidence).
+
+### CI/CD (GitHub Actions — `.github/workflows/`)
+
+- **`ci.yml`** (push/PR to `main`) — **contracts job:** `cargo fmt --check` → `cargo test` → `cargo build --target wasm32-unknown-unknown --release` → upload wasm; **frontend job:** `npm ci` → `npm run lint` → `npm run typecheck` → `npm run test:ci` → `npm run build`. Fails on any lint/type/test/build error.
+- **`deploy.yml`** (push to `main` + manual dispatch) — **deploy-contract:** build wasm → `stellar contract deploy` (factory) on testnet; **deploy-frontend:** `needs: deploy-contract` → `npm run build` with `NEXT_PUBLIC_*` → `vercel deploy --prod`. Deploy steps skip cleanly when secrets are absent. Details in [§21](#21-cicd-pipeline)–[§22](#22-deployment--rollback).
+
+---
+
 ## Mobile Responsive UI
 
 <div align="center">
@@ -1116,10 +1169,10 @@ Overview of all positions, fees, and historical activity.
 
 ### Token Addresses (Stellar Testnet)
 
-| Token | Type | Address |
-|---|---|---|
-| XLM | Native Stellar asset | Native (use `stellar_strkey::Contract` for Soroban) |
-| USDC | SEP-41 / Circle testnet | `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5` (testnet) |
+| Token | Type | Soroban address (SAC) | Classic issuer |
+|---|---|---|---|
+| XLM | Native Stellar asset (SAC) | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` | native |
+| USDC | SEP-41 SAC over classic USDC | `CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA` | `GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5` |
 
 > **Note:** XLM in Soroban is accessed via the Stellar Asset Contract (SAC). The SAC for native XLM on testnet is deployed at a deterministic address. Use `stellar_sdk::StellarAssetContract::native()` to resolve it.
 
@@ -1277,21 +1330,25 @@ SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
 HORIZON_URL=https://horizon-testnet.stellar.org
 NETWORK_PASSPHRASE="Test SDF Network ; September 2015"
 
-# Deployed contract addresses (fill after deployment)
-FACTORY_CONTRACT_ADDRESS=
-POOL_CONTRACT_ADDRESS=
-POSITION_MANAGER_ADDRESS=
-ROUTER_CONTRACT_ADDRESS=
+# Deployed contract addresses (current testnet deployment)
+FACTORY_CONTRACT_ADDRESS=CDFY5UX77PQDP2QGNY4YGZVKK6FE6J2LSSVZFXTQSHRO2JIES7LSZGPE
+POOL_CONTRACT_ADDRESS=CCYBX2FOT5RWL6T2CQROAA3ZECYNNE3PSJ7WQXULU6AJOCCK6YHSTH32
+POSITION_MANAGER_ADDRESS=CC6IBQ7VNVK7CQYIZX47NJPDH5DL5ISQSA26BLBZXVMVEQ3QGUAZDREI
+ROUTER_CONTRACT_ADDRESS=CDLCGPUP7NW4B4SSFG5H4I75PKDGPUZDHOX5C6YICJY7RDJ7VP7BAT62
 
-# Token addresses
+# Token addresses (Stellar Asset Contracts — the C-address, not the issuer)
 XLM_SAC_ADDRESS=CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
-USDC_CONTRACT_ADDRESS=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5
+USDC_SAC_ADDRESS=CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA
+USDC_ISSUER=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5   # classic issuer, trustline txs only
 
-# Frontend
-VITE_NETWORK=testnet
-VITE_FACTORY_ADDRESS=${FACTORY_CONTRACT_ADDRESS}
-VITE_ROUTER_ADDRESS=${ROUTER_CONTRACT_ADDRESS}
-VITE_POOL_ADDRESS=${POOL_CONTRACT_ADDRESS}
+# Frontend (Next.js — NEXT_PUBLIC_* are inlined at build time)
+NEXT_PUBLIC_NETWORK=testnet
+NEXT_PUBLIC_FACTORY_ADDRESS=${FACTORY_CONTRACT_ADDRESS}
+NEXT_PUBLIC_ROUTER_ADDRESS=${ROUTER_CONTRACT_ADDRESS}
+NEXT_PUBLIC_POOL_ADDRESS=${POOL_CONTRACT_ADDRESS}
+NEXT_PUBLIC_POSITION_MANAGER_ADDRESS=${POSITION_MANAGER_ADDRESS}
+NEXT_PUBLIC_XLM_ADDRESS=${XLM_SAC_ADDRESS}
+NEXT_PUBLIC_USDC_ADDRESS=${USDC_SAC_ADDRESS}
 ```
 
 ### Build Contracts
@@ -1314,7 +1371,7 @@ cargo test
 ```bash
 cd frontend
 npm install
-npm run dev  # starts on http://localhost:5173
+npm run dev  # starts on http://localhost:3000
 ```
 
 ---
