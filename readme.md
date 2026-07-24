@@ -1149,6 +1149,20 @@ Explore the pool's deploy + interaction transaction hashes on
 --target wasm32-unknown-unknown --release` produces 4 contract wasms.
 
 ---
+## Monitoring Dashboard
+<div align="center">
+  <img
+    src="https://github.com/user-attachments/assets/def2319f-4edf-4e7d-a2f3-a892a44d5b13"
+    alt="Screenshot from 2026-07-24 18-41-31"
+    width="48%"
+  />
+  <img
+    src="https://github.com/user-attachments/assets/9aff7f1e-2efa-4acc-a2eb-42207dd0c733"
+    alt="Screenshot from 2026-07-24 18-41-45"
+    width="48%"
+  />
+</div>
+
 
 ## 26. User Feedback Implementation
 
