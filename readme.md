@@ -1,6 +1,5 @@
-# StellarSwap — CLMM DEX on Stellar Testnet
+# Astroflo — CLMM DEX on Stellar Testnet
 
-<img width="2880" height="1565" alt="StellarSwap screenshot" src="https://github.com/user-attachments/assets/bba36b9f-3ec3-4fe8-ac8e-60cfebeb0554" />
 
 <div align="center">
 <img src="https://img.shields.io/badge/Stellar-Soroban-7B2FBE?style=for-the-badge" />
