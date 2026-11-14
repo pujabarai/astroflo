@@ -24,3 +24,7 @@ frontend/tsconfig.tsbuildinfo
 *.log
 .DS_Store
 design.zip
+
+# Load-test wallets (contain secret keys)
+frontend/scripts/loadtest-wallets*.json
+frontend/scripts/loadtest-final-*.json

@@ -11,8 +11,6 @@
 
 **A Concentrated Liquidity Market Maker (CLMM) DEX on Stellar Soroban, inspired by Uniswap v3. Trading pair: XLM / USDC.**
 
-[Demo Video](https://youtu.be/foDUtKHLPnk?si=MXrqrKTPU4tDcy7i)
-
 </div>
 
 ---
@@ -56,6 +54,7 @@ contracts/            # Soroban smart contracts (Rust workspace)
 └── router/           # exact-in / exact-out swap routing
 frontend/             # Next.js + TypeScript app
 scripts/              # redeploy.sh, sync-price.sh
+.github/workflows/    # ci.yml, deploy.yml
 ```
 
 ---
@@ -105,3 +104,13 @@ Get testnet XLM from [Friendbot](https://friendbot.stellar.org).
 cd contracts && cargo test     # 7 tests
 cd frontend && npm run test    # 11 tests
 ```
+
+---
+
+## CI/CD
+
+- **`ci.yml`** (push/PR to `main`): contracts run `cargo fmt --check`, `cargo test` and the wasm build. Frontend runs lint, typecheck, tests and build.
+- **`deploy.yml`** (push to `main`): deploys contracts to testnet, then deploys the frontend to Vercel. It needs the `STELLAR_SECRET_KEY` and `VERCEL_TOKEN` secrets and skips the deploy steps when they are missing.
+
+<img width="2854" height="1104" alt="CI/CD pipeline" src="https://github.com/user-attachments/assets/f1b08e25-252e-4f0a-a1e3-7216a256c03b" />
+
